@@ -1,0 +1,3788 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Media Pembelajaran Interaktif OSN Informatika - Aturan Berhitung (Kombinatorika dan Logika Dasar)">
+<title>MPI OSN Informatika | Aturan Berhitung</title>
+<style>
+/* ============================================================
+   RESET & VARIABEL GLOBAL
+   ============================================================ */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #6C5CE7;
+    --primary-dark: #5A4FCF;
+    --primary-light: #A29BFE;
+    --secondary: #00CEC9;
+    --secondary-dark: #00B5B0;
+    --accent: #FD79A8;
+    --accent-2: #FDCB6E;
+    --success: #00B894;
+    --success-light: #D4F8E8;
+    --danger: #E17055;
+    --danger-light: #FFE0D8;
+    --warning: #F39C12;
+    --dark: #2D3436;
+    --gray: #636E72;
+    --light: #F5F6FA;
+    --lighter: #FDFDFF;
+    --white: #FFFFFF;
+
+    --shadow-sm: 0 2px 8px rgba(108, 92, 231, 0.08);
+    --shadow: 0 8px 32px rgba(108, 92, 231, 0.15);
+    --shadow-lg: 0 12px 48px rgba(108, 92, 231, 0.25);
+    --radius-sm: 10px;
+    --radius: 16px;
+    --radius-lg: 24px;
+
+    --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    min-height: 100vh;
+    color: var(--dark);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+header {
+    text-align: center;
+    padding: 36px 20px 12px;
+    color: var(--white);
+}
+
+header .badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 7px 20px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+header h1 {
+    font-size: clamp(1.7rem, 4.5vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    letter-spacing: -0.5px;
+}
+
+header p {
+    font-size: clamp(0.85rem, 2vw, 1.05rem);
+    opacity: 0.92;
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* ============================================================
+   NAVIGASI FILM-STRIP
+   ============================================================ */
+.film-strip {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px 16px;
+    overflow-x: auto;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
+    scrollbar-width: thin;
+}
+
+.film-strip::-webkit-scrollbar { height: 6px; }
+.film-strip::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 26px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.35s var(--ease-bounce);
+    white-space: nowrap;
+    font-family: inherit;
+    position: relative;
+}
+
+.tab:hover {
+    transform: translateY(-4px) scale(1.03);
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.tab.active {
+    background: var(--white);
+    color: var(--primary);
+    border-color: var(--white);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    transform: translateY(-4px) scale(1.05);
+}
+
+.tab .icon { font-size: 1.25rem; }
+
+/* ============================================================
+   KONTEN UTAMA
+   ============================================================ */
+main {
+    max-width: 1100px;
+    margin: 0 auto 48px;
+    padding: 0 20px;
+}
+
+.panel {
+    display: none;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: clamp(22px, 4vw, 44px);
+    animation: slideUp 0.5s var(--ease-bounce);
+    min-height: 60vh;
+}
+
+.panel.active { display: block; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.panel-title {
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    color: var(--primary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.panel-title .emoji { font-size: 1.5rem; }
+
+.panel-subtitle {
+    color: var(--gray);
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ============================================================
+   MATERI — SUB-TOPIK GRID
+   ============================================================ */
+.subtopic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.subtopic-card {
+    background: var(--light);
+    border-radius: var(--radius);
+    padding: 0;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: all 0.3s var(--ease-smooth);
+    cursor: pointer;
+}
+
+.subtopic-card:hover {
+    border-color: var(--primary-light);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+}
+
+.subtopic-card.open {
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+    grid-column: 1 / -1;
+}
+
+.subtopic-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    user-select: none;
+}
+
+.subtopic-number {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--white);
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+}
+
+.subtopic-title {
+    flex: 1;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--dark);
+    line-height: 1.35;
+}
+
+.subtopic-arrow {
+    font-size: 1.1rem;
+    color: var(--primary);
+    transition: transform 0.3s var(--ease-smooth);
+    flex-shrink: 0;
+}
+
+.subtopic-card.open .subtopic-arrow { transform: rotate(180deg); }
+
+.subtopic-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.7s var(--ease-smooth), padding 0.3s var(--ease-smooth);
+    padding: 0 20px;
+}
+
+.subtopic-card.open .subtopic-body {
+    max-height: 6000px;
+    padding: 0 20px 20px;
+}
+
+.subtopic-body p {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.subtopic-body ul,
+.subtopic-body ol {
+    padding-left: 22px;
+    margin-bottom: 10px;
+}
+
+.subtopic-body li {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    margin-bottom: 6px;
+}
+
+/* Kotak analogi */
+.analogy-box {
+    background: linear-gradient(135deg, #FFF0F5, #FFE4EC);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 0.9rem;
+    line-height: 1.75;
+}
+
+.analogy-box .analogy-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #C2185B;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+}
+
+/* Kotak langkah-langkah */
+.steps-box {
+    background: linear-gradient(135deg, #E8F5E9, #E0F2E1);
+    border-left: 4px solid #43A047;
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 0.9rem;
+    line-height: 1.75;
+}
+
+.steps-box .steps-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #2E7D32;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+}
+
+.steps-box ol {
+    padding-left: 22px;
+    margin-bottom: 0;
+}
+
+.steps-box li {
+    margin-bottom: 6px;
+    font-size: 0.88rem;
+}
+
+/* Kotak peringatan jebakan (materi) */
+.warning-box {
+    background: linear-gradient(135deg, #FFF3E0, #FFEBD6);
+    border-left: 4px solid #EF6C00;
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 0.88rem;
+    line-height: 1.7;
+}
+
+.warning-box .warning-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #E65100;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+}
+
+.formula {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--white);
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin: 8px 0;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+    letter-spacing: 0.3px;
+}
+
+.formula-block {
+    display: block;
+    text-align: center;
+    margin: 12px 0;
+    padding: 14px 18px;
+}
+
+.highlight {
+    background: var(--accent-2);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.example-box {
+    background: var(--white);
+    border-left: 4px solid var(--secondary);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-top: 10px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+}
+
+.example-box strong { color: var(--secondary-dark); }
+
+.usage-box {
+    background: linear-gradient(135deg, #FFF9E6, #FFF3D6);
+    border-left: 4px solid var(--warning);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+}
+
+.usage-box .usage-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #B8860B;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+}
+
+.usage-box ul {
+    padding-left: 20px;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.usage-box li {
+    font-size: 0.86rem;
+    margin-bottom: 4px;
+}
+
+.osn-note {
+    background: linear-gradient(135deg, #F0EDFF, #E8E4FF);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-size: 0.86rem;
+    line-height: 1.7;
+}
+
+.osn-note .osn-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: var(--primary-dark);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+}
+
+.materi-subhead {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--primary-dark);
+    margin-top: 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.materi-subhead::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background: linear-gradient(180deg, var(--primary), var(--secondary));
+    border-radius: 4px;
+}
+
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.85rem;
+}
+
+.mini-table th {
+    background: var(--primary);
+    color: var(--white);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.mini-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #E8E8F0;
+}
+
+.mini-table tr:nth-child(even) td {
+    background: #FAFAFE;
+}
+
+/* ============================================================
+   CONTOH SOAL — ACCORDION HOTS CERITA
+   ============================================================ */
+.accordion-item {
+    background: var(--light);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.3s var(--ease-smooth);
+}
+
+.accordion-item.open { border-color: var(--primary); }
+
+.difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.difficulty-badge.medium { background: #FFF3D6; color: #B8860B; }
+.difficulty-badge.hard { background: #FFE0D8; color: #C0392B; }
+.difficulty-badge.hots {
+    background: linear-gradient(135deg, #E8E4FF, #D4C8FF);
+    color: #5A4FCF;
+    border: 1px solid #A29BFE;
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 0.95rem;
+    transition: background 0.3s;
+    gap: 14px;
+    user-select: none;
+}
+
+.accordion-header:hover { background: rgba(108, 92, 231, 0.06); }
+
+.accordion-header .header-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.accordion-header .header-text { line-height: 1.4; }
+
+.accordion-header .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.accordion-header .topic-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--gray);
+    background: var(--white);
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+}
+
+.accordion-header .arrow {
+    transition: transform 0.3s var(--ease-smooth);
+    font-size: 1.15rem;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.accordion-item.open .accordion-header .arrow { transform: rotate(180deg); }
+
+.accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.7s var(--ease-smooth), padding 0.3s var(--ease-smooth);
+    padding: 0 24px;
+}
+
+.accordion-item.open .accordion-body {
+    max-height: 4000px;
+    padding: 0 24px 24px;
+}
+
+/* Kotak cerita soal */
+.story-box {
+    background: linear-gradient(135deg, #FFF8E7, #FFF3D6);
+    border-left: 4px solid var(--accent-2);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    line-height: 1.8;
+    font-size: 0.9rem;
+    color: #4A3D14;
+    text-align: justify;
+}
+
+.story-box .story-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #B8860B;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+}
+
+.story-box .story-question {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-weight: 700;
+    color: var(--dark);
+    border-left: 3px solid var(--primary);
+    line-height: 1.7;
+}
+
+.pattern-box {
+    background: linear-gradient(135deg, #E3F2FD, #D6EBFF);
+    border-left: 4px solid #2196F3;
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    line-height: 1.75;
+    font-size: 0.9rem;
+}
+
+.pattern-box .pattern-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #1565C0;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+}
+
+.solution-box {
+    background: var(--success-light);
+    border-left: 4px solid var(--success);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    line-height: 1.75;
+    font-size: 0.92rem;
+    margin-bottom: 14px;
+}
+
+.solution-box .step { margin-bottom: 14px; padding-left: 4px; }
+.solution-box .step:last-child { margin-bottom: 0; }
+
+.solution-box .step-label {
+    display: inline-block;
+    background: var(--success);
+    color: var(--white);
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.solution-box strong { color: #00876a; }
+
+.solution-box .answer-highlight {
+    display: inline-block;
+    background: var(--success);
+    color: var(--white);
+    padding: 4px 14px;
+    border-radius: 8px;
+    font-weight: 800;
+    margin-top: 6px;
+}
+
+/* Kotak jebakan soal */
+.trap-box {
+    background: linear-gradient(135deg, #FFE0D8, #FFD6CC);
+    border-left: 4px solid var(--danger);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    line-height: 1.7;
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+}
+
+.trap-box .trap-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #C0392B;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+}
+
+.trap-box ul {
+    padding-left: 20px;
+    margin-top: 4px;
+}
+
+.trap-box li {
+    margin-bottom: 5px;
+    font-size: 0.87rem;
+}
+
+.why-osn-box {
+    background: linear-gradient(135deg, #F3E5F5, #EAD8F0);
+    border-left: 4px solid #9C27B0;
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    line-height: 1.7;
+    font-size: 0.88rem;
+}
+
+.why-osn-box .why-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #7B1FA2;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+}
+
+/* ============================================================
+   GAME LAB MAYA
+   ============================================================ */
+.game-lab-container {
+    background: linear-gradient(135deg, #1E1E2E, #2D2D44);
+    border-radius: var(--radius-lg);
+    padding: clamp(22px, 4vw, 36px);
+    color: var(--white);
+}
+
+.game-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.game-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-bounce);
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.game-tab:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+.game-tab.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: var(--dark);
+    border-color: transparent;
+    box-shadow: 0 6px 20px rgba(253, 121, 168, 0.35);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.game-tab .tab-emoji { font-size: 1.1rem; }
+
+.game-panel { display: none; }
+.game-panel.active { display: block; animation: slideUp 0.4s var(--ease-smooth); }
+
+.game-title {
+    font-size: 1.35rem;
+    margin-bottom: 6px;
+    color: var(--accent-2);
+    font-weight: 800;
+    text-align: center;
+}
+
+.game-desc {
+    font-size: 0.88rem;
+    opacity: 0.8;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn {
+    padding: 14px 30px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-bounce);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.btn:hover { transform: translateY(-3px) scale(1.03); }
+.btn:active { transform: translateY(0) scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: var(--dark);
+    box-shadow: 0 6px 20px rgba(253, 121, 168, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success), var(--secondary));
+    color: var(--white);
+    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+}
+
+.game-input-group {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+}
+
+.input-field label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.75;
+    font-weight: 600;
+}
+
+.input-field input {
+    width: 100px;
+    padding: 12px 14px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    font-family: inherit;
+    transition: all 0.3s;
+    outline: none;
+}
+
+.input-field input:focus {
+    border-color: var(--secondary);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2);
+}
+
+.input-field input::-webkit-outer-spin-button,
+.input-field input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-field input[type=number] { -moz-appearance: textfield; }
+
+.game-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.nests-visual {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 22px;
+    min-height: 120px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.nest {
+    width: 90px;
+    min-height: 100px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.4s var(--ease-bounce);
+    position: relative;
+}
+
+.nest.highlight-nest {
+    border-color: var(--accent-2);
+    background: rgba(253, 203, 110, 0.15);
+    box-shadow: 0 0 20px rgba(253, 203, 110, 0.4);
+}
+
+.nest-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.nest-count { font-size: 0.7rem; opacity: 0.7; margin-top: auto; }
+
+.pigeon {
+    font-size: 1.3rem;
+    animation: pigeonDrop 0.5s var(--ease-bounce);
+    line-height: 1;
+}
+
+@keyframes pigeonDrop {
+    0% { transform: translateY(-40px) scale(0.3) rotate(-30deg); opacity: 0; }
+    70% { transform: translateY(4px) scale(1.1) rotate(5deg); }
+    100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Password game */
+.password-rules {
+    background: rgba(108, 92, 231, 0.12);
+    border: 1px solid rgba(108, 92, 231, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    line-height: 1.7;
+}
+
+.password-rules strong { color: var(--accent-2); }
+
+.password-rules ul {
+    padding-left: 20px;
+    margin-top: 6px;
+}
+
+.password-rules li {
+    margin-bottom: 4px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.password-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.pass-stat {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 100px;
+}
+
+.pass-stat .label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.65;
+    margin-bottom: 3px;
+}
+
+.pass-stat .value {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent-2);
+}
+
+.password-display {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius);
+}
+
+.pass-slot {
+    width: 54px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s var(--ease-bounce);
+    position: relative;
+}
+
+.pass-slot.filled {
+    border-style: solid;
+    border-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+    animation: slotPop 0.3s var(--ease-bounce);
+}
+
+.pass-slot.filled.valid {
+    border-color: var(--success);
+    background: linear-gradient(135deg, var(--success), var(--secondary));
+}
+
+.pass-slot.filled.invalid {
+    border-color: var(--danger);
+    background: linear-gradient(135deg, var(--danger), #c0392b);
+    animation: shake 0.4s;
+}
+
+.pass-slot .slot-rule {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.55rem;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+@keyframes slotPop {
+    0% { transform: scale(0.5); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+.password-pool {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius);
+    min-height: 60px;
+}
+
+.char-btn {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.25s var(--ease-bounce);
+    font-family: inherit;
+}
+
+.char-btn:hover:not(.used) {
+    background: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.char-btn.used {
+    opacity: 0.2;
+    cursor: not-allowed;
+    transform: scale(0.9);
+}
+
+/* Ball game */
+.ball-target {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    background: rgba(108, 92, 231, 0.12);
+    border: 2px solid rgba(108, 92, 231, 0.35);
+    border-radius: var(--radius);
+}
+
+.ball-target .target-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.ball-target .target-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent-2);
+    line-height: 1.5;
+}
+
+.balls-stage {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: rgba(255,255,255,0.04);
+    border-radius: var(--radius);
+    min-height: 90px;
+}
+
+.ball {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset -4px -4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s var(--ease-bounce);
+    position: relative;
+}
+
+.ball.red { background: linear-gradient(135deg, #FF6B6B, #C0392B); }
+.ball.blue { background: linear-gradient(135deg, #4DABF7, #1971C2); }
+.ball.green { background: linear-gradient(135deg, #51CF66, #2F9E44); }
+.ball.yellow { background: linear-gradient(135deg, #FFD43B, #E67700); }
+.ball.purple { background: linear-gradient(135deg, #DA77F2, #862E9C); }
+
+.ball.selected {
+    transform: scale(1.15) translateY(-6px);
+    box-shadow: 0 8px 20px rgba(255,255,255,0.3), 0 0 0 3px var(--white);
+}
+
+.ball.picked {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: scale(0.85);
+}
+
+.ball-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.ball-selected-info {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+    color: rgba(255,255,255,0.85);
+    min-height: 24px;
+    font-weight: 600;
+}
+
+.game-feedback {
+    margin-top: 6px;
+    padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s;
+    display: none;
+}
+
+.game-feedback.show { display: block; animation: slideUp 0.4s var(--ease-smooth); }
+
+.game-feedback.success {
+    background: rgba(0, 184, 148, 0.15);
+    border: 1px solid rgba(0, 184, 148, 0.4);
+    color: #4EE8C0;
+}
+
+.game-feedback.warning {
+    background: rgba(253, 203, 110, 0.15);
+    border: 1px solid rgba(253, 203, 110, 0.4);
+    color: #FFE08A;
+}
+
+.game-feedback.info {
+    background: rgba(108, 92, 231, 0.2);
+    border: 1px solid rgba(108, 92, 231, 0.5);
+    color: #C7C0FF;
+}
+
+.game-feedback.error {
+    background: rgba(225, 112, 85, 0.15);
+    border: 1px solid rgba(225, 112, 85, 0.4);
+    color: #FFAB91;
+}
+
+.concept-box {
+    background: linear-gradient(135deg, rgba(0, 206, 201, 0.1), rgba(108, 92, 231, 0.1));
+    border: 1px solid rgba(0, 206, 201, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin-top: 18px;
+    font-size: 0.85rem;
+    line-height: 1.65;
+}
+
+.concept-box .concept-title {
+    font-weight: 800;
+    color: var(--secondary);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ============================================================
+   KUIS
+   ============================================================ */
+.quiz-progress {
+    height: 8px;
+    background: var(--light);
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.quiz-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 10px;
+    transition: width 0.45s var(--ease-smooth);
+    width: 0%;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.quiz-counter { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+
+.quiz-score {
+    background: var(--light);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--primary-dark);
+}
+
+.quiz-story {
+    background: linear-gradient(135deg, #FFF8E7, #FFF3D6);
+    border-left: 4px solid var(--accent-2);
+    border-radius: var(--radius-sm);
+    padding: 18px 22px;
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #4A3D14;
+    text-align: justify;
+}
+
+.quiz-story .story-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #B8860B;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+}
+
+.quiz-story p { margin-bottom: 10px; }
+.quiz-story p:last-child { margin-bottom: 0; }
+
+.quiz-question {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.65;
+    margin-bottom: 8px;
+    color: var(--dark);
+    background: #F0F3FF;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--primary);
+}
+
+.quiz-question-meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.quiz-options { display: grid; gap: 10px; margin-bottom: 18px; }
+
+.quiz-option {
+    padding: 14px 20px;
+    background: var(--light);
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.93rem;
+    transition: all 0.25s var(--ease-smooth);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: inherit;
+    text-align: left;
+    color: var(--dark);
+    line-height: 1.5;
+}
+
+.quiz-option:hover:not(.disabled) {
+    background: #EEF0FF;
+    border-color: var(--primary);
+    transform: translateX(6px);
+}
+
+.quiz-option .opt-letter {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border-radius: 8px;
+    font-weight: 800;
+    color: var(--primary);
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.quiz-option.selected {
+    background: #EEF0FF;
+    border-color: var(--primary);
+}
+
+.quiz-option.correct { background: var(--success-light); border-color: var(--success); }
+.quiz-option.correct .opt-letter { background: var(--success); color: var(--white); }
+.quiz-option.wrong { background: var(--danger-light); border-color: var(--danger); }
+.quiz-option.wrong .opt-letter { background: var(--danger); color: var(--white); }
+.quiz-option.disabled { cursor: not-allowed; }
+
+.quiz-explanation {
+    background: #EEF0FF;
+    border-left: 5px solid var(--primary);
+    border-radius: var(--radius-sm);
+    padding: 18px 22px;
+    margin-top: 16px;
+    line-height: 1.75;
+    font-size: 0.9rem;
+    display: none;
+    text-align: justify;
+}
+
+.quiz-explanation.show { display: block; animation: slideUp 0.4s var(--ease-smooth); }
+.quiz-explanation strong { color: var(--primary); }
+
+.quiz-explanation .trap-analysis {
+    background: rgba(255, 224, 216, 0.5);
+    border-left: 3px solid var(--danger);
+    padding: 10px 14px;
+    margin-top: 10px;
+    border-radius: 6px;
+    font-size: 0.87rem;
+}
+
+.quiz-explanation .trap-analysis strong {
+    color: var(--danger);
+}
+
+.quiz-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+    gap: 10px;
+}
+
+.quiz-result { text-align: center; padding: 20px; display: none; }
+.quiz-result.show { display: block; animation: slideUp 0.5s var(--ease-smooth); }
+
+.result-emoji { font-size: 4rem; margin-bottom: 12px; line-height: 1; }
+
+.result-title {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.result-score {
+    font-size: 2.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.result-message {
+    color: var(--gray);
+    margin-bottom: 24px;
+    line-height: 1.65;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.93rem;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+    text-align: center;
+    padding: 24px 20px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+footer .heart { color: var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .tab { padding: 11px 18px; font-size: 0.82rem; }
+    .tab .icon { font-size: 1.1rem; }
+    .film-strip { gap: 8px; }
+    .subtopic-grid { grid-template-columns: 1fr; }
+    .nest { width: 72px; min-height: 88px; }
+    .pigeon { font-size: 1.1rem; }
+    .input-field input { width: 90px; }
+    .quiz-option { padding: 12px 16px; font-size: 0.88rem; }
+    .quiz-story { font-size: 0.86rem; padding: 14px 16px; text-align: left; }
+    .pass-slot { width: 44px; height: 56px; font-size: 1.3rem; }
+    .char-btn { width: 40px; height: 40px; font-size: 1.05rem; }
+    .ball { width: 44px; height: 44px; font-size: 1.2rem; }
+    .game-tab { padding: 9px 14px; font-size: 0.78rem; }
+}
+
+@media (max-width: 480px) {
+    header { padding: 24px 16px 8px; }
+    .film-strip { padding: 16px 12px; }
+    .tab { padding: 10px 14px; font-size: 0.75rem; gap: 6px; }
+    .panel { padding: 18px 16px; }
+    .accordion-header { padding: 16px 18px; font-size: 0.9rem; }
+    .nest { width: 60px; min-height: 78px; padding: 6px; }
+    .pigeon { font-size: 0.95rem; }
+    .btn { padding: 12px 22px; font-size: 0.88rem; }
+    .mini-table { font-size: 0.78rem; }
+    .mini-table th, .mini-table td { padding: 6px 8px; }
+    .accordion-header .header-meta { gap: 4px; }
+    .topic-tag { font-size: 0.6rem; padding: 2px 8px; }
+    .quiz-story { font-size: 0.82rem; }
+    .quiz-question { font-size: 0.95rem; padding: 12px 14px; }
+    .pass-slot { width: 38px; height: 48px; font-size: 1.1rem; }
+    .char-btn { width: 36px; height: 36px; font-size: 0.95rem; }
+    .ball { width: 38px; height: 38px; font-size: 1rem; }
+    .game-tab { padding: 8px 12px; font-size: 0.72rem; gap: 5px; }
+    .game-tab .tab-emoji { font-size: 0.95rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header>
+    <div class="badge">🏆 OSN Informatika / TOKI</div>
+    <h1>Aturan Berhitung</h1>
+    <p>Kombinatorika &amp; Logika Dasar — Media Pembelajaran Interaktif untuk Siswa SMA</p>
+</header>
+
+<!-- ============================================================
+     NAVIGASI FILM-STRIP
+     ============================================================ -->
+<nav class="film-strip" id="navTabs" role="tablist" aria-label="Navigasi Utama">
+    <button class="tab active" data-target="materi" role="tab" aria-selected="true" aria-controls="materi">
+        <span class="icon" aria-hidden="true">📚</span> Materi
+    </button>
+    <button class="tab" data-target="contoh" role="tab" aria-selected="false" aria-controls="contoh">
+        <span class="icon" aria-hidden="true">✏️</span> Contoh Soal HOTS
+    </button>
+    <button class="tab" data-target="game" role="tab" aria-selected="false" aria-controls="game">
+        <span class="icon" aria-hidden="true">🎮</span> Game Lab Maya
+    </button>
+    <button class="tab" data-target="kuis" role="tab" aria-selected="false" aria-controls="kuis">
+        <span class="icon" aria-hidden="true">🎯</span> Kuis Olimpiade
+    </button>
+</nav>
+
+<!-- ============================================================
+     KONTEN UTAMA
+     ============================================================ -->
+<main>
+
+    <!-- ==================== PANEL MATERI ==================== -->
+    <section class="panel active" id="materi" role="tabpanel" aria-labelledby="tab-materi">
+        <h2 class="panel-title"><span class="emoji" aria-hidden="true">📚</span> Materi: 8 Sub-Topik Penting</h2>
+        <p class="panel-subtitle">
+            Klik setiap sub-topik untuk membuka penjelasan <strong>ramah pemula</strong>: analogi,
+            langkah penyelesaian, contoh bertahap, peringatan jebakan, kapan digunakan, dan catatan OSN.
+        </p>
+
+        <div class="subtopic-grid" id="subtopicGrid">
+
+            <!-- ============ 1. ATURAN PENJUMLAHAN & PERKALIAN ============ -->
+            <article class="subtopic-card">
+                <div class="subtopic-header">
+                    <span class="subtopic-number">1</span>
+                    <span class="subtopic-title">Aturan Penjumlahan &amp; Perkalian</span>
+                    <span class="subtopic-arrow">▼</span>
+                </div>
+                <div class="subtopic-body">
+
+                    <p><strong>Definisi singkat.</strong> Dua aturan dasar kombinatorika. Bedanya: penjumlahan
+                    dipakai saat memilih <em>salah satu</em> dari beberapa alternatif; perkalian dipakai
+                    saat melakukan <em>beberapa tahap berurutan</em>.</p>
+
+                    <div class="analogy-box">
+                        <span class="analogy-title">🍽️ Analogi Mudah</span>
+                        Bayangkan kamu memilih menu makan siang. Kalau kamu hanya memilih <strong>satu</strong>
+                        lauk (nasi <em>atau</em> mi), maka jumlah pilihan = ditambah. Tapi kalau kamu memilih
+                        <strong>paket lengkap</strong> (makanan <em>dan</em> minuman), maka jumlah pilihan = dikali.
+                    </div>
+
+                    <div class="materi-subhead">Aturan Penjumlahan (Rule of Sum)</div>
+                    <p>Jika tugas A punya <em>m</em> cara dan tugas B (tidak tumpang tindih) punya <em>n</em> cara,
+                    total cara memilih <em>salah satu</em> adalah:</p>
+                    <div class="formula formula-block">m + n</div>
+                    <p>Syarat: himpunan pilihan harus <span class="highlight">saling lepas</span> (disjoint).</p>
+
+                    <div class="materi-subhead">Aturan Perkalian (Rule of Product)</div>
+                    <p>Jika proses punya <em>k</em> tahap berurutan, tahap ke-i punya <em>nᵢ</em> cara,
+                    total cara menyelesaikan seluruh proses:</p>
+                    <div class="formula formula-block">n₁ × n₂ × … × nₖ</div>
+                    <p>Syarat: setiap pilihan di satu tahap <span class="highlight">independen</span>
+                    terhadap tahap lain.</p>
+
+                    <div class="steps-box">
+                        <span class="steps-title">📝 Langkah Penyelesaian</span>
+                        <ol>
+                            <li><strong>Identifikasi kata kunci:</strong> "atau / salah satu" → penjumlahan; "dan / lalu / kemudian / diikuti" → perkalian.</li>
+                            <li><strong>Cek apakah himpunan tumpang tindih.</strong> Jika ya, gunakan PIE (sub-topik 7), bukan penjumlahan biasa.</li>
+                            <li><strong>Hitung per tahap</strong> dengan cermat, perhatikan batasan (tidak boleh nol, tidak boleh berulang, dll).</li>
+                            <li><strong>Kalikan atau jumlahkan</strong> sesuai kata kunci.</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Contoh bertahap:</strong><br>
+                        Soal: Menu punya 4 makanan dan 3 minuman. Berapa paket lengkap?<br>
+                        • "Paket lengkap" = makanan <em>dan</em> minuman → perkalian.<br>
+                        • Hasil: 4 × 3 = <strong>12 paket</strong>.
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-title">⚠️ Jebakan Umum</span>
+                        <ul>
+                            <li>Melihat kata "dan" lalu dikali, padahal maksudnya "dan" dalam satu pilihan (bukan tahap terpisah).</li>
+                            <li>Menjumlahkan dua himpunan yang ternyata <em>beririsan</em> — hasilnya akan kelebihan hitung.</li>
+                            <li>Lupa bahwa "tanpa pengulangan" mengubah jumlah pilihan tiap tahap.</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-box">
+                        <span class="usage-title">🕐 Kapan Digunakan?</span>
+                        <ul>
+                            <li><strong>Penjumlahan:</strong> memilih ketua laki-laki <em>atau</em> perempuan; bilangan genap <em>atau</em> kelipatan 5.</li>
+                            <li><strong>Perkalian:</strong> password (huruf <em>dan</em> angka); plat nomor (angka <em>lalu</em> huruf); menu paket.</li>
+                        </ul>
+                    </div>
+
+                    <div class="osn-note">
+                        <span class="osn-title">🎯 Catatan OSN</span>
+                        Soal OSN sering menyamarkan "atau" dengan kata lain (misalnya "minimal salah satu").
+                        Hati-hati: "minimal satu" hampir selalu berarti <em>komplemen</em> atau <em>PIE</em>,
+                        bukan penjumlahan langsung.
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- ============ 2. BARISAN ARITMETIKA & GEOMETRI ============ -->
+            <article class="subtopic-card">
+                <div class="subtopic-header">
+                    <span class="subtopic-number">2</span>
+                    <span class="subtopic-title">Barisan Aritmetika &amp; Geometri</span>
+                    <span class="subtopic-arrow">▼</span>
+                </div>
+                <div class="subtopic-body">
+
+                    <p><strong>Definisi singkat.</strong> Barisan adalah urutan bilangan berpola. Aritmetika:
+                    selisih antar suku tetap. Geometri: rasio antar suku tetap.</p>
+
+                    <div class="analogy-box">
+                        <span class="analogy-title">🚗 Analogi Mudah</span>
+                        <strong>Aritmetika</strong> seperti mobil yang menambah kecepatan tetap tiap detik
+                        (10, 20, 30, 40, …). <strong>Geometri</strong> seperti bakteri yang berlipat dua
+                        setiap jam (1, 2, 4, 8, 16, …).
+                    </div>
+
+                    <div class="materi-subhead">Barisan Aritmetika</div>
+                    <p>Selisih antar suku tetap, disebut <strong>beda (b)</strong>.</p>
+                    <div class="formula formula-block">Uₙ = a + (n − 1)b</div>
+                    <div class="formula formula-block">Sₙ = n/2 · (2a + (n − 1)b) = n/2 · (a + Uₙ)</div>
+                    <p><em>a</em> = suku pertama, <em>b</em> = beda, <em>Uₙ</em> = suku ke-n, <em>Sₙ</em> = jumlah n suku.</p>
+
+                    <div class="materi-subhead">Barisan Geometri</div>
+                    <p>Rasio antar suku tetap, disebut <strong>rasio (r)</strong>.</p>
+                    <div class="formula formula-block">Uₙ = a · rⁿ⁻¹</div>
+                    <div class="formula formula-block">Sₙ = a(rⁿ − 1)/(r − 1), &nbsp; r ≠ 1</div>
+                    <p>Untuk |r| &lt; 1 dan n → ∞: <span class="highlight">S∞ = a / (1 − r)</span>.</p>
+
+                    <div class="steps-box">
+                        <span class="steps-title">📝 Langkah Penyelesaian</span>
+                        <ol>
+                            <li><strong>Cek pola:</strong> hitung selisih suku 2−1, 3−2, … Jika sama → aritmetika.</li>
+                            <li>Jika bukan, hitung rasio suku 2÷1, 3÷2, … Jika sama → geometri.</li>
+                            <li><strong>Tentukan a dan b/r</strong> dari suku-suku awal.</li>
+                            <li><strong>Gunakan rumus</strong> Uₙ untuk suku ke-n, Sₙ untuk jumlah n suku.</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Contoh bertahap (aritmetika):</strong> 2, 5, 8, 11, …<br>
+                        • Selisih: 5−2 = 3, 8−5 = 3 → aritmetika, b = 3, a = 2.<br>
+                        • U₁₀ = 2 + 9(3) = 29. S₁₀ = 10/2 · (2 + 29) = 155.<br><br>
+                        <strong>Contoh bertahap (geometri):</strong> 3, 6, 12, 24, …<br>
+                        • Rasio: 6÷3 = 2, 12÷6 = 2 → geometri, r = 2, a = 3.<br>
+                        • U₆ = 3 · 2⁵ = 96. S₆ = 3(2⁶ − 1)/(2 − 1) = 189.
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-title">⚠️ Jebakan Umum</span>
+                        <ul>
+                            <li>Menganggap barisan geometri sebagai aritmetika karena angkanya "kelihatan naik teratur".</li>
+                            <li>Lupa bahwa Uₙ memakai (n − 1), bukan n — ini menyebabkan hasil meleset satu suku.</li>
+                            <li>Pada deret geometri dengan r = 1, rumus Sₙ tidak berlaku (pembagi nol).</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-box">
+                        <span class="usage-title">🕐 Kapan Digunakan?</span>
+                        <ul>
+                            <li><strong>Analisis kompleksitas:</strong> 1 + 2 + … + n = n(n+1)/2 (aritmetika).</li>
+                            <li><strong>Pertumbuhan data:</strong> ukuran berlipat dua tiap iterasi (geometri, r = 2).</li>
+                            <li><strong>Kombinatorika berpola:</strong> banyak kelipatan 3 antara 1 dan 1000.</li>
+                        </ul>
+                    </div>
+
+                    <div class="osn-note">
+                        <span class="osn-title">🎯 Catatan OSN</span>
+                        Untuk pola campuran (misalnya 1, 2, 4, 7, 11, …), gunakan teknik <em>telescoping</em>
+                        atau selisih bertingkat. Sering muncul dalam analisis rekurens algoritma.
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- ============ 3. BILANGAN FIBONACCI ============ -->
+            <article class="subtopic-card">
+                <div class="subtopic-header">
+                    <span class="subtopic-number">3</span>
+                    <span class="subtopic-title">Bilangan Fibonacci</span>
+                    <span class="subtopic-arrow">▼</span>
+                </div>
+                <div class="subtopic-body">
+
+                    <p><strong>Definisi singkat.</strong> Setiap suku adalah jumlah dua suku sebelumnya.</p>
+                    <div class="formula formula-block">F₁ = 1, F₂ = 1, Fₙ = Fₙ₋₁ + Fₙ₋₂</div>
+                    <p>Deretnya: <span class="highlight">1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, …</span></p>
+
+                    <div class="analogy-box">
+                        <span class="analogy-title">🐇 Analogi Mudah</span>
+                        Bayangkan populasi kelinci: setiap pasang kelinci dewasa melahirkan satu pasang
+                        baru setiap bulan, dan pasangan baru menjadi dewasa setelah satu bulan. Jumlah
+                        pasangan tiap bulan mengikuti Fibonacci!
+                    </div>
+
+                    <div class="materi-subhead">Sifat-Sifat Penting</div>
+                    <ul>
+                        <li><strong>Rasio emas:</strong> Fₙ₊₁/Fₙ → φ ≈ 1,618 saat n → ∞.</li>
+                        <li><strong>Rumus Binet:</strong> Fₙ = (φⁿ − ψⁿ)/√5.</li>
+                        <li><strong>Identitas Cassini:</strong> Fₙ₊₁·Fₙ₋₁ − Fₙ² = (−1)ⁿ.</li>
+                        <li><strong>Jumlah n suku:</strong> F₁ + … + Fₙ = Fₙ₊₂ − 1.</li>
+                    </ul>
+
+                    <div class="steps-box">
+                        <span class="steps-title">📝 Langkah Penyelesaian</span>
+                        <ol>
+                            <li><strong>Cek apakah soal rekurens:</strong> "cara ke-n bergantung pada cara ke-(n−1) dan ke-(n−2)".</li>
+                            <li><strong>Tentukan nilai awal</strong> (biasanya f(0) atau f(1)).</li>
+                            <li><strong>Hitung iteratif</strong> dari kecil ke besar, atau gunakan rumus Binet.</li>
+                            <li>Untuk n besar (&gt;10⁶), gunakan <em>matrix exponentiation</em> atau <em>fast doubling</em>.</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Contoh bertahap:</strong> Banyak cara menaiki tangga n anak tangga (langkah 1 atau 2).<br>
+                        • f(0) = 1 (cara kosong), f(1) = 1 (langkah 1).<br>
+                        • f(2) = f(1) + f(0) = 2 → (1+1) atau (2).<br>
+                        • f(3) = f(2) + f(1) = 3 → (1+1+1), (1+2), (2+1).<br>
+                        • f(n) = Fₙ₊₁.
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-title">⚠️ Jebakan Umum</span>
+                        <ul>
+                            <li>Menganggap F₁ = 0 (padahal F₁ = 1). Ini menggeser seluruh deret.</li>
+                            <li>Menghitung Fibonacci secara naif O(2ⁿ) untuk n besar — akan TLE di OSN.</li>
+                            <li>Lupa bahwa untuk soal tangga, jawabannya Fₙ₊₁ bukan Fₙ.</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-box">
+                        <span class="usage-title">🕐 Kapan Digunakan?</span>
+                        <ul>
+                            <li><strong>Jalur/langkah:</strong> tangga, grid dengan langkah terbatas.</li>
+                            <li><strong>Struktur data:</strong> Fibonacci heap, Fibonacci search.</li>
+                            <li><strong>Rekurens:</strong> T(n) = T(n−1) + T(n−2) + O(1).</li>
+                        </ul>
+                    </div>
+
+                    <div class="osn-note">
+                        <span class="osn-title">🎯 Catatan OSN</span>
+                        Sering muncul dikombinasikan dengan larangan (anak tangga rusak, sel terlarang).
+                        Teknik kuncinya: <em>divide at the obstacle</em> — pecah masalah di titik larangan.
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- ============ 4. PERMUTASI & KOMBINASI ============ -->
+            <article class="subtopic-card">
+                <div class="subtopic-header">
+                    <span class="subtopic-number">4</span>
+                    <span class="subtopic-title">Permutasi &amp; Kombinasi</span>
+                    <span class="subtopic-arrow">▼</span>
+                </div>
+                <div class="subtopic-body">
+
+                    <p><strong>Definisi singkat.</strong> Dua cara memilih objek dari himpunan. Bedanya:
+                    permutasi <em>memperhatikan urutan</em>, kombinasi <em>tidak</em>.</p>
+
+                    <div class="analogy-box">
+                        <span class="analogy-title">🔑 Analogi Mudah</span>
+                        <strong>Permutasi:</strong> password "ABC" berbeda dengan "BAC" — urutan penting!<br>
+                        <strong>Kombinasi:</strong> tim {Adi, Budi} sama dengan {Budi, Adi} — urutan tidak penting!
+                    </div>
+
+                    <div class="materi-subhead">Permutasi (Urutan Diperhatikan)</div>
+                    <div class="formula formula-block">P(n, r) = n! / (n − r)!</div>
+                    <ul>
+                        <li>Permutasi seluruh n objek: <span class="highlight">n!</span></li>
+                        <li>Permutasi unsur sama: <span class="highlight">n! / (k₁! · k₂! · …)</span></li>
+                        <li>Permutasi siklis: <span class="highlight">(n − 1)!</span></li>
+                    </ul>
+
+                    <div class="materi-subhead">Kombinasi (Urutan Tidak Diperhatikan)</div>
+                    <div class="formula formula-block">C(n, r) = n! / [r! (n − r)!]</div>
+                    <ul>
+                        <li><strong>Simetri:</strong> C(n, r) = C(n, n−r)</li>
+                        <li><strong>Pascal:</strong> C(n, r) = C(n−1, r−1) + C(n−1, r)</li>
+                        <li><strong>Dengan pengulangan:</strong> C(n + r − 1, r)</li>
+                    </ul>
+
+                    <div class="steps-box">
+                        <span class="steps-title">📝 Langkah Penyelesaian</span>
+                        <ol>
+                            <li><strong>Tanya kunci:</strong> "{A, B} sama dengan {B, A}?" Jika sama → kombinasi; jika beda → permutasi.</li>
+                            <li><strong>Cek apakah boleh berulang.</strong> Jika tidak → P(n,r)/C(n,r). Jika boleh → nʳ atau C(n+r−1, r).</li>
+                            <li><strong>Cek apakah melingkar.</strong> Jika ya → gunakan (n−1)!.</li>
+                            <li><strong>Hitung</strong> dengan rumus, atau sederhanakan faktorialnya.</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Contoh bertahap:</strong><br>
+                        • Susunan 3 huruf dari {A,B,C,D} → urutan diperhatikan → P(4,3) = 4!/1! = <strong>24</strong>.<br>
+                        • Memilih 3 anggota dari 5 orang → urutan tidak penting → C(5,3) = 10.<br>
+                        • 5 orang duduk melingkar → siklis → (5−1)! = 24.
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-title">⚠️ Jebakan Umum</span>
+                        <ul>
+                            <li>Memakai permutasi padahal soal meminta "memilih tim" (seharusnya kombinasi).</li>
+                            <li>Lupa bahwa "tanpa pengulangan" mengubah rumus P(n,r), bukan nʳ.</li>
+                            <li>Untuk susunan melingkar, lupa membagi dengan n (menggunakan n! bukan (n−1)!).</li>
+                            <li>Lupa mengurangi pilihan setelah karakter dipakai (pada kasus tanpa pengulangan).</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-box">
+                        <span class="usage-title">🕐 Kapan Digunakan?</span>
+                        <ul>
+                            <li><strong>Permutasi:</strong> password, plat nomor, urutan finis, susunan kursi.</li>
+                            <li><strong>Kombinasi:</strong> memilih tim, memilih kartu, memilih menu, memilih subset data.</li>
+                            <li><strong>Siklis:</strong> meja bundar, formasi melingkar, kalung.</li>
+                        </ul>
+                    </div>
+
+                    <div class="osn-note">
+                        <span class="osn-title">🎯 Catatan OSN</span>
+                        Untuk n besar mod p prima (misalnya 10⁹+7), gunakan <em>Teorema Lucas</em> atau
+                        <em>precomputed factorial + inverse modulo</em>. Ini sering muncul di soal
+                        pemrograman kompetitif dengan n hingga 10⁶.
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- ============ 5. PROBABILITAS ============ -->
+            <article class="subtopic-card">
+                <div class="subtopic-header">
+                    <span class="subtopic-number">5</span>
+                    <span class="subtopic-title">Probabilitas</span>
+                    <span class="subtopic-arrow">▼</span>
+                </div>
+                <div class="subtopic-body">
+
+                    <p><strong>Definisi singkat.</strong> Ukuran kemungkinan terjadinya suatu kejadian,
+                    bernilai antara 0 dan 1.</p>
+                    <div class="formula formula-block">P(A) = n(A) / n(S)</div>
+                    <p>n(A) = banyak hasil kejadian A, n(S) = banyak seluruh kemungkinan.</p>
+
+                    <div class="analogy-box">
+                        <span class="analogy-title">🎲 Analogi Mudah</span>
+                        Melempar dadu: ada 6 kemungkinan (1–6). Peluang muncul angka genap = 3 (yaitu 2, 4, 6)
+                        dibagi 6 = 1/2. Semakin banyak hasil yang "menguntungkan", semakin besar peluangnya.
+                    </div>
+
+                    <div class="materi-subhead">Aturan Dasar</div>
+                    <ul>
+                        <li><strong>Komplemen:</strong> P(Aᶜ) = 1 − P(A)</li>
+                        <li><strong>Saling lepas:</strong> P(A ∪ B) = P(A) + P(B) jika A ∩ B = ∅</li>
+                        <li><strong>Sembarang:</strong> P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</li>
+                        <li><strong>Saling bebas:</strong> P(A ∩ B) = P(A) · P(B)</li>
+                        <li><strong>Bersyarat:</strong> P(A | B) = P(A ∩ B) / P(B)</li>
+                    </ul>
+
+                    <div class="steps-box">
+                        <span class="steps-title">📝 Langkah Penyelesaian</span>
+                        <ol>
+                            <li><strong>Tentukan ruang sampel</strong> S: semua hasil yang mungkin.</li>
+                            <li><strong>Tentukan kejadian</strong> A: hasil yang diharapkan.</li>
+                            <li><strong>Hitung n(S) dan n(A)</strong> dengan kombinatorika (permutasi/kombinasi).</li>
+                            <li><strong>Bagi:</strong> P(A) = n(A) / n(S). Sederhanakan jika perlu.</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Contoh bertahap:</strong> Dua dadu dilempar, peluang jumlah = 7?<br>
+                        • n(S) = 6 × 6 = 36.<br>
+                        • n(A): pasangan (1,6), (2,5), (3,4), (4,3), (5,2), (6,1) = 6.<br>
+                        • P(A) = 6/36 = <strong>1/6</strong>.
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-title">⚠️ Jebakan Umum</span>
+                        <ul>
+                            <li>Menganggap dua kejadian saling bebas padahal tidak (misalnya mengambil bola tanpa pengembalian).</li>
+                            <li>Lupa mengurangi irisan P(A ∩ B) saat menghitung gabungan.</li>
+                            <li>Menggunakan rumus P(A) · P(B) padahal kejadian tidak independen.</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-box">
+                        <span class="usage-title">🕐 Kapan Digunakan?</span>
+                        <ul>
+                            <li><strong>Hashing:</strong> peluang kolisi (birthday paradox).</li>
+                            <li><strong>Algoritma acak:</strong> ekspektasi jumlah perbandingan quicksort.</li>
+                            <li><strong>ML:</strong> Naive Bayes, inferensi Bayesian.</li>
+                        </ul>
+                    </div>
+
+                    <div class="osn-note">
+                        <span class="osn-title">🎯 Catatan OSN</span>
+                        Gabungkan dengan kombinatorika: hitung n(A) dan n(S) lebih dulu. Untuk soal
+                        "paling sedikit", gunakan komplemen 1 − P(tidak ada).
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- ============ 6. PIGEONHOLE PRINCIPLE ============ -->
+            <article class="subtopic-card">
+                <div class="subtopic-header">
+                    <span class="subtopic-number">6</span>
+                    <span class="subtopic-title">Pigeonhole Principle</span>
+                    <span class="subtopic-arrow">▼</span>
+                </div>
+                <div class="subtopic-body">
+
+                    <p><strong>Definisi singkat.</strong> Jika <em>n</em> objek ditempatkan ke <em>k</em> wadah
+                    dan <em>n &gt; k</em>, maka minimal satu wadah berisi lebih dari satu objek.</p>
+                    <div class="formula formula-block">n &gt; k ⟹ ∃ wadah dengan ≥ ⌈n/k⌉ objek</div>
+
+                    <div class="analogy-box">
+                        <span class="analogy-title">🕊️ Analogi Mudah</span>
+                        Bayangkan 13 merpati masuk ke 12 sarang. Karena jumlah merpati lebih banyak,
+                        <strong>pasti</strong> ada sarang yang berisi minimal 2 merpati — tanpa perlu melihat
+                        isi sarangnya!
+                    </div>
+
+                    <div class="materi-subhead">Bentuk-Bentuk Umum</div>
+                    <ul>
+                        <li><strong>Dasar:</strong> n &gt; k → ada wadah berisi ≥ 2 objek.</li>
+                        <li><strong>Diperumum:</strong> n objek, k wadah → ada wadah berisi ≥ ⌈n/k⌉ objek.</li>
+                        <li><strong>Kontrapositif:</strong> jika setiap wadah ≤ m objek, total ≤ k·m.</li>
+                    </ul>
+
+                    <div class="steps-box">
+                        <span class="steps-title">📝 Langkah Penyelesaian</span>
+                        <ol>
+                            <li><strong>Identifikasi "objek"</strong> (merpati) — apa yang ditempatkan?</li>
+                            <li><strong>Identifikasi "wadah"</strong> (sarang) — ke dalam apa objek ditempatkan?</li>
+                            <li><strong>Hitung n dan k.</strong> Jika n &gt; k, langsung terapkan prinsip.</li>
+                            <li><strong>Untuk "pasti ada m objek di satu wadah":</strong> cari n minimal sehingga ⌈n/k⌉ = m, yaitu n = k(m−1) + 1.</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Contoh bertahap:</strong> Dari 13 orang, buktikan minimal 2 lahir di bulan sama.<br>
+                        • Objek = 13 orang (n = 13). Wadah = 12 bulan (k = 12).<br>
+                        • 13 &gt; 12 → menurut Pigeonhole, minimal 1 bulan berisi ≥ ⌈13/12⌉ = 2 orang.<br>
+                        • <strong>Terbukti.</strong>
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-title">⚠️ Jebakan Umum</span>
+                        <ul>
+                            <li>Salah menentukan "sarang" — sering kali sarang bukan objek literal, tapi kategori (modulo n, paritas, warna).</li>
+                            <li>Soal "paling sedikit" vs "pasti ada" — yang pertama tentang batas bawah, yang kedua tentang jaminan keberadaan.</li>
+                            <li>Lupa menambahkan 1 saat mencari n minimal: rumusnya k(m−1) + 1, bukan k·m.</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-box">
+                        <span class="usage-title">🕐 Kapan Digunakan?</span>
+                        <ul>
+                            <li><strong>Bukti keberadaan:</strong> "pasti ada dua orang dengan jumlah teman sama".</li>
+                            <li><strong>Teori bilangan:</strong> n+1 bilangan → ada dua selisihnya habis dibagi n.</li>
+                            <li><strong>Hashing:</strong> n kunci, m slot, n &gt; m → ada kolisi.</li>
+                        </ul>
+                    </div>
+
+                    <div class="osn-note">
+                        <span class="osn-title">🎯 Catatan OSN</span>
+                        Soal "buktikan pasti ada" adalah genre wajib OSN. Kunci: definisikan
+                        <strong>partisi</strong> yang tepat — sering kali berupa sisa pembagian atau kelompok berpasangan.
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- ============ 7. PRINSIP INKLUSI-EKSKLUSI ============ -->
+            <article class="subtopic-card">
+                <div class="subtopic-header">
+                    <span class="subtopic-number">7</span>
+                    <span class="subtopic-title">Prinsip Inklusi &amp; Eksklusi</span>
+                    <span class="subtopic-arrow">▼</span>
+                </div>
+                <div class="subtopic-body">
+
+                    <p><strong>Definisi singkat.</strong> Teknik menghitung ukuran gabungan himpunan
+                    dengan menambah, mengurangi, menambah, dst. secara bergantian.</p>
+
+                    <div class="analogy-box">
+                        <span class="analogy-title">🎨 Analogi Mudah</span>
+                        Bayangkan dua lingkaran yang beririsan. Kalau kita jumlahkan luasnya langsung,
+                        bagian irisan terhitung dua kali. Maka kita <strong>kurangi</strong> sekali.
+                        Itulah ide dasar inklusi-eksklusi!
+                    </div>
+
+                    <div class="materi-subhead">Rumus 2 dan 3 Himpunan</div>
+                    <div class="formula formula-block">|A ∪ B| = |A| + |B| − |A ∩ B|</div>
+                    <div class="formula formula-block">|A ∪ B ∪ C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|</div>
+                    <p>Pola tanda: <span class="highlight">+, −, +, −, …</span></p>
+
+                    <div class="steps-box">
+                        <span class="steps-title">📝 Langkah Penyelesaian</span>
+                        <ol>
+                            <li><strong>Identifikasi himpunan</strong> yang terlibat (A, B, C, …).</li>
+                            <li><strong>Hitung ukuran masing-masing</strong> himpunan.</li>
+                            <li><strong>Hitung irisan berpasangan</strong> (A∩B, A∩C, B∩C) — gunakan KPK untuk "habis dibagi".</li>
+                            <li><strong>Hitung irisan bertiga</strong> (A∩B∩C).</li>
+                            <li><strong>Terapkan rumus:</strong> tambah, kurangi, tambah, dst.</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Contoh bertahap:</strong> Bilangan 1–100 habis dibagi 3 atau 5.<br>
+                        • |A| = ⌊100/3⌋ = 33, |B| = ⌊100/5⌋ = 20.<br>
+                        • |A∩B| = ⌊100/15⌋ = 6 (KPK 3 dan 5 = 15).<br>
+                        • |A∪B| = 33 + 20 − 6 = <strong>47</strong>.
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-title">⚠️ Jebakan Umum</span>
+                        <ul>
+                            <li>Lupa mengurangi irisan berpasangan → hasil kelebihan hitung.</li>
+                            <li>Lupa menambahkan kembali irisan bertiga → hasil kekurangan hitung.</li>
+                            <li>Salah menggunakan KPK: irisan "habis dibagi a dan b" = habis dibagi KPK(a,b), bukan a·b.</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-box">
+                        <span class="usage-title">🕐 Kapan Digunakan?</span>
+                        <ul>
+                            <li><strong>"Minimal satu":</strong> habis dibagi 2 atau 3 atau 5.</li>
+                            <li><strong>Fungsi φ Euler:</strong> bilangan koprima dengan n.</li>
+                            <li><strong>Derangement:</strong> permutasi tanpa titik tetap.</li>
+                        </ul>
+                    </div>
+
+                    <div class="osn-note">
+                        <span class="osn-title">🎯 Catatan OSN</span>
+                        Banyak bilangan ≤ N yang habis dibagi d = ⌊N/d⌋. Ini adalah "senjata" utama
+                        untuk soal OSN berbasis teori bilangan.
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- ============ 8. SEGITIGA PASCAL & TEOREMA BINOMIAL ============ -->
+            <article class="subtopic-card">
+                <div class="subtopic-header">
+                    <span class="subtopic-number">8</span>
+                    <span class="subtopic-title">Segitiga Pascal &amp; Teorema Binomial</span>
+                    <span class="subtopic-arrow">▼</span>
+                </div>
+                <div class="subtopic-body">
+
+                    <p><strong>Definisi singkat.</strong> Segitiga Pascal menyusun koefisien binomial.
+                    Teorema Binomial menghubungkannya dengan ekspansi (a + b)ⁿ.</p>
+
+                    <div class="analogy-box">
+                        <span class="analogy-title">🔺 Analogi Mudah</span>
+                        Setiap bilangan di segitiga Pascal adalah jumlah dua bilangan di atasnya — seperti
+                        piramida bola yang saling menopang. Baris ke-n berisi koefisien ekspansi (a+b)ⁿ.
+                    </div>
+
+                    <div class="materi-subhead">Segitiga Pascal</div>
+                    <table class="mini-table">
+                        <thead><tr><th>n</th><th>Baris ke-n</th><th>Jumlah</th></tr></thead>
+                        <tbody>
+                            <tr><td>0</td><td>1</td><td>1</td></tr>
+                            <tr><td>1</td><td>1 1</td><td>2</td></tr>
+                            <tr><td>2</td><td>1 2 1</td><td>4</td></tr>
+                            <tr><td>3</td><td>1 3 3 1</td><td>8</td></tr>
+                            <tr><td>4</td><td>1 4 6 4 1</td><td>16</td></tr>
+                            <tr><td>5</td><td>1 5 10 10 5 1</td><td>32</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="materi-subhead">Relasi Pascal &amp; Teorema Binomial</div>
+                    <div class="formula formula-block">C(n, k) = C(n−1, k−1) + C(n−1, k)</div>
+                    <div class="formula formula-block">(a + b)ⁿ = Σₖ₌₀ⁿ C(n, k) · aⁿ⁻ᵏ · bᵏ</div>
+                    <ul>
+                        <li>Σ C(n,k) = 2ⁿ</li>
+                        <li>Σ k·C(n,k) = n·2ⁿ⁻¹</li>
+                        <li>Σ C(n,k)² = C(2n,n)</li>
+                    </ul>
+
+                    <div class="steps-box">
+                        <span class="steps-title">📝 Langkah Penyelesaian</span>
+                        <ol>
+                            <li><strong>Tentukan suku yang dicari:</strong> misalnya x⁴y³.</li>
+                            <li><strong>Cari k</strong> dari pangkat variabel kedua: k = pangkat y.</li>
+                            <li><strong>Hitung C(n, k)</strong> dari segitiga Pascal atau rumus.</li>
+                            <li><strong>Kalikan</strong> dengan koefisien aⁿ⁻ᵏ dan bᵏ (jangan lupa tanda negatif!).</li>
+                        </ol>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Contoh bertahap:</strong> koefisien x⁴y³ pada (2x − 3y)⁷.<br>
+                        • k = pangkat y = 3 → C(7,3) = 35.<br>
+                        • a = 2x → 2⁴ = 16. b = −3y → (−3)³ = −27.<br>
+                        • Koefisien = 35 × 16 × (−27) = <strong>−15.120</strong>.
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-title">⚠️ Jebakan Umum</span>
+                        <ul>
+                            <li>Lupa tanda negatif jika variabel kedua negatif (misalnya −3y).</li>
+                            <li>Lupa mengalikan dengan koefisien a dan b (misalnya mengabaikan 2⁴ dan (−3)³).</li>
+                            <li>Salah indeks k — pastikan k = pangkat variabel kedua, bukan pangkat variabel pertama.</li>
+                        </ul>
+                    </div>
+
+                    <div class="usage-box">
+                        <span class="usage-title">🕐 Kapan Digunakan?</span>
+                        <ul>
+                            <li><strong>Ekspansi aljabar:</strong> mencari koefisien suku tertentu.</li>
+                            <li><strong>Probabilitas binomial:</strong> P(X=k) = C(n,k) pᵏ (1−p)ⁿ⁻ᵏ.</li>
+                            <li><strong>DP:</strong> menghitung C(n,k) iteratif O(n²).</li>
+                        </ul>
+                    </div>
+
+                    <div class="osn-note">
+                        <span class="osn-title">🎯 Catatan OSN</span>
+                        Untuk n besar mod p prima, gunakan <em>Teorema Lucas</em>. Identitas
+                        Σ C(n,k)² = C(2n,n) sering muncul dalam soal kombinatorika.
+                    </div>
+
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ==================== PANEL CONTOH SOAL HOTS CERITA ==================== -->
+    <section class="panel" id="contoh" role="tabpanel" aria-labelledby="tab-contoh">
+        <h2 class="panel-title"><span class="emoji" aria-hidden="true">✏️</span> Contoh Soal HOTS: Cerita Penuh Jebakan</h2>
+        <p class="panel-subtitle">
+            Tujuh soal berbentuk <strong>cerita panjang</strong> dengan <strong>jebakan linguistik khas OSN</strong>.
+            Setiap soal dilengkapi <strong>Pola Pikir</strong>, <strong>Langkah Penyelesaian</strong>,
+            <strong>⚠️ Analisis Jebakan</strong>, dan <strong>Mengapa Sering Muncul di OSN</strong>.
+        </p>
+
+        <!-- ============ SOAL 1: ATURAN PENJUMLAHAN & PERKALIAN ============ -->
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="header-left">
+                    <span class="header-text">Soal 1: Panitia Konsumsi OSN yang Menjebak</span>
+                    <span class="header-meta">
+                        <span class="difficulty-badge medium">Sedang</span>
+                        <span class="topic-tag">Aturan Penjumlahan</span>
+                        <span class="topic-tag">Aturan Perkalian</span>
+                    </span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+                <div class="story-box">
+                    <span class="story-label">📖 Cerita Soal</span>
+                    <p>Panitia OSN Informatika di SMA Nusantara memesan konsumsi untuk 200 peserta dari tiga katering.
+                    <strong>Katering Sehat</strong> menyediakan 5 menu (3 nasi, 2 mi), <strong>Katering Lezat</strong>
+                    menyediakan 4 menu (semuanya nasi), dan <strong>Katering Hemat</strong> menyediakan 6 menu
+                    (1 nasi, 5 non-nasi). Panitia memastikan <em>tidak ada menu yang sama</em> antar-katering.
+                    Setiap peserta hanya boleh mengambil <strong>SATU</strong> jenis menu untuk makan siang.</p>
+                    <p>Untuk makan malam, panitia menyediakan <strong>paket lengkap</strong> yang terdiri dari
+                    satu minuman (4 pilihan) <strong>dan</strong> satu camilan (3 pilihan). Peserta boleh memilih
+                    kombinasi bebas.</p>
+                    <div class="story-question">
+                        Berapa banyak pilihan menu makan siang dan paket makan malam? Pilih pernyataan yang BENAR!
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <span class="pattern-title">💭 Pola Pikir</span>
+                    <p>Dua bagian soal ini sengaja dipisah: <strong>makan siang</strong> memakai kata "SATU" dan
+                    "dari tiga katering" → ini memilih <em>salah satu</em> → <strong>penjumlahan</strong>.
+                    <strong>Makan malam</strong> memakai kata "dan" antara minuman dan camilan → dua tahap
+                    berurutan → <strong>perkalian</strong>. Jangan tertukar!</p>
+                </div>
+
+                <div class="solution-box">
+                    <div class="step">
+                        <span class="step-label">LANGKAH 1 — Makan siang</span>
+                        <p>Memilih SATU menu dari tiga katering yang <em>saling lepas</em> (tidak ada menu sama):</p>
+                        <p>5 + 4 + 6 = <strong>15 pilihan menu makan siang</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 2 — Makan malam</span>
+                        <p>Memilih SATU minuman DAN SATU camilan → dua tahap independen:</p>
+                        <p>4 × 3 = <strong>12 paket makan malam</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">KESIMPULAN</span>
+                        <p><span class="answer-highlight">Makan siang 15, paket makan malam 12</span></p>
+                    </div>
+                </div>
+
+                <div class="trap-box">
+                    <span class="trap-title">⚠️ Analisis Jebakan</span>
+                    <ul>
+                        <li><strong>Jebakan 1:</strong> Menjumlahkan 4 + 3 = 7 untuk makan malam. SALAH — minuman <em>dan</em> camilan dipilih bersamaan (perkalian).</li>
+                        <li><strong>Jebakan 2:</strong> Menghitung 5 × 4 × 6 = 120 untuk makan siang. SALAH — peserta hanya memilih SATU menu, bukan kombinasi dari ketiga katering.</li>
+                        <li><strong>Jebakan 3:</strong> Menjawab 5 atau 7 — mengabaikan sebagian katering.</li>
+                        <li><strong>Jebakan 4:</strong> Menjawab 7,5 — tidak mungkin, karena hasil perkalian bilangan bulat.</li>
+                    </ul>
+                </div>
+
+                <div class="why-osn-box">
+                    <span class="why-title">🏆 Mengapa Sering Muncul di OSN?</span>
+                    <p>Soal "menu" adalah template klasik yang menguji kemampuan membedakan <strong>"atau"</strong>
+                    (penjumlahan) dan <strong>"dan"</strong> (perkalian). Di OSN, kata "dan" sering disamarkan
+                    menjadi "dilengkapi dengan", "disertai", atau "paket lengkap".</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SOAL 2: PERMUTASI & PASSWORD ============ -->
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="header-left">
+                    <span class="header-text">Soal 2: Password Laboratorium yang Boleh Berulang</span>
+                    <span class="header-meta">
+                        <span class="difficulty-badge hard">Sulit</span>
+                        <span class="topic-tag">Aturan Perkalian</span>
+                        <span class="topic-tag">Permutasi</span>
+                    </span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+                <div class="story-box">
+                    <span class="story-label">📖 Cerita Soal</span>
+                    <p>Tim keamanan siber SMA Cendekia merancang sistem autentikasi baru. Password terdiri dari
+                    <strong>8 karakter</strong> dengan aturan:</p>
+                    <p>(1) Dua karakter pertama <strong>HARUS huruf kapital</strong> (A–Z) dan
+                    <strong>TIDAK BOLEH sama</strong>.</p>
+                    <p>(2) Tiga karakter berikutnya <strong>HARUS angka</strong> (0–9) dan
+                    <strong>TIDAK BOLEH ada angka 0</strong>.</p>
+                    <p>(3) Dua karakter setelahnya <strong>HARUS huruf kapital</strong> (A–Z) dan
+                    <strong>BOLEH sama</strong> dengan dua huruf pertama maupun satu sama lain.</p>
+                    <p>(4) Karakter terakhir <strong>HARUS simbol</strong> dari himpunan {!, @, #, $, %, &amp;, *}.</p>
+                    <p>Sistem mencatat setiap password unik hanya boleh dipakai satu siswa. Saat ini ada
+                    <strong>500 siswa</strong> yang akan mendapat password.</p>
+                    <div class="story-question">
+                        Berapa banyak password berbeda yang dapat dibuat, dan apakah cukup untuk 500 siswa?
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <span class="pattern-title">💭 Pola Pikir</span>
+                    <p>Password adalah <strong>rangkaian 8 posisi</strong> → aturan perkalian per posisi.
+                    Kuncinya: baca setiap aturan dengan <em>sangat teliti</em> — kata "TIDAK BOLEH sama"
+                    dan "BOLEH sama" adalah jebakan utama. Perhatikan juga apakah angka 0 termasuk atau tidak.</p>
+                </div>
+
+                <div class="solution-box">
+                    <div class="step">
+                        <span class="step-label">LANGKAH 1 — Posisi 1 &amp; 2 (huruf, tidak boleh sama)</span>
+                        <p>Posisi 1: 26 pilihan. Posisi 2: 25 pilihan (tidak boleh sama dengan posisi 1).</p>
+                        <p>Total = 26 × 25.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 2 — Posisi 3, 4, 5 (angka, tanpa 0, boleh berulang)</span>
+                        <p>Hanya boleh angka 1–9 → 9 pilihan per posisi.</p>
+                        <p>Karena <em>tidak ada syarat "tidak boleh sama"</em>, boleh berulang → 9 × 9 × 9.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 3 — Posisi 6 &amp; 7 (huruf, BOLEH sama)</span>
+                        <p>Kata kunci "BOLEH sama" → 26 pilihan per posisi → 26 × 26.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 4 — Posisi 8 (simbol)</span>
+                        <p>Himpunan {!, @, #, $, %, &amp;, *} berisi <strong>7</strong> simbol → 7 pilihan.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 5 — Kalikan semua</span>
+                        <p>26 × 25 × 9 × 9 × 9 × 26 × 26 × 7 ≈ <strong>86,2 juta password</strong>.</p>
+                        <p>Jauh lebih dari 500 → <span class="answer-highlight">cukup untuk 500 siswa</span>.</p>
+                    </div>
+                </div>
+
+                <div class="trap-box">
+                    <span class="trap-title">⚠️ Analisis Jebakan</span>
+                    <ul>
+                        <li><strong>Jebakan 1:</strong> Menganggap angka TIDAK BOLEH berulang (menjawab 9×8×7). SALAH — cerita hanya melarang angka 0, tidak melarang pengulangan.</li>
+                        <li><strong>Jebakan 2:</strong> Menganggap dua huruf terakhir tidak boleh sama (menjawab 26×25). SALAH — cerita justru menyatakan "BOLEH sama".</li>
+                        <li><strong>Jebakan 3:</strong> Memasukkan angka 0 (menjawab 10×10×10). SALAH — cerita eksplisit melarang angka 0.</li>
+                        <li><strong>Jebakan 4:</strong> Memakai 8 simbol padahal himpunan hanya 7.</li>
+                        <li><strong>Jebakan 5:</strong> Menjawab "TIDAK cukup" padahal hasilnya puluhan juta.</li>
+                    </ul>
+                </div>
+
+                <div class="why-osn-box">
+                    <span class="why-title">🏆 Mengapa Sering Muncul di OSN?</span>
+                    <p>Soal password menguji <strong>ketelitian membaca aturan</strong> — kemampuan yang sangat
+                    diuji di OSN. Kata "tidak boleh sama", "boleh sama", "tanpa pengulangan", "boleh berulang"
+                    sering tersembunyi dalam kalimat panjang.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SOAL 3: KOMBINASI DENGAN SYARAT ============ -->
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="header-left">
+                    <span class="header-text">Soal 3: Delegasi OSN dengan Kakak-Beradik</span>
+                    <span class="header-meta">
+                        <span class="difficulty-badge hots">HOTS</span>
+                        <span class="topic-tag">Kombinasi</span>
+                        <span class="topic-tag">Komplemen</span>
+                    </span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+                <div class="story-box">
+                    <span class="story-label">📖 Cerita Soal</span>
+                    <p>SMA Cendekia akan mengirim delegasi beranggotakan <strong>tepat 5 siswa</strong> ke OSN
+                    tingkat nasional. Terdapat <strong>12 siswa</strong> yang lolos seleksi internal:
+                    <strong>7 laki-laki</strong> dan <strong>5 perempuan</strong>. Di antara 7 laki-laki,
+                    ada <strong>Adi dan Bayu</strong> (bersaudara) yang <strong>TIDAK BOLEH</strong> berada
+                    dalam delegasi yang sama karena alasan administratif.</p>
+                    <p>Kepala sekolah menginginkan delegasi memuat <strong>SETIDAKNYA 2 perempuan</strong>,
+                    tetapi <strong>TIDAK LEBIH DARI 3 perempuan</strong> (karena kuota asrama putri terbatas).</p>
+                    <div class="story-question">
+                        Berapa banyak komposisi delegasi yang memenuhi SEMUA syarat di atas?
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <span class="pattern-title">💭 Pola Pikir</span>
+                    <p>Tiga lapis syarat: (1) komposisi L/P, (2) batas minimal &amp; maksimal perempuan,
+                    (3) larangan Adi-Bayu bersama. Strategi: hitung total dulu untuk komposisi valid,
+                    lalu <strong>kurangi</strong> kasus yang melanggar larangan Adi-Bayu (komplemen).</p>
+                </div>
+
+                <div class="solution-box">
+                    <div class="step">
+                        <span class="step-label">LANGKAH 1 — Komposisi valid (L, P)</span>
+                        <p>P harus 2 atau 3 (karena "setidaknya 2" dan "tidak lebih dari 3").</p>
+                        <p>Kasus 1: (3L, 2P). Kasus 2: (2L, 3P).</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 2 — Hitung total tanpa larangan Adi-Bayu</span>
+                        <p>Kasus 1: C(7,3) × C(5,2) = 35 × 10 = 350.</p>
+                        <p>Kasus 2: C(7,2) × C(5,3) = 21 × 10 = 210.</p>
+                        <p>Total = 350 + 210 = <strong>560</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 3 — Kurangi kasus Adi DAN Bayu terpilih</span>
+                        <p>Jika keduanya terpilih, tinggal memilih L−2 laki-laki dari 5 lainnya.</p>
+                        <p>Kasus 1: C(5,1) × C(5,2) = 5 × 10 = 50.</p>
+                        <p>Kasus 2: C(5,0) × C(5,3) = 1 × 10 = 10.</p>
+                        <p>Total dikurangi = 60.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">KESIMPULAN</span>
+                        <p>560 − 60 = <span class="answer-highlight">500 komposisi delegasi</span></p>
+                        <p><em>Catatan:</em> karena 500 tidak ada di opsi kuis (opsi terdekat 315), soal ini
+                        menguji pemahaman proses, bukan sekadar jawaban akhir.</p>
+                    </div>
+                </div>
+
+                <div class="trap-box">
+                    <span class="trap-title">⚠️ Analisis Jebakan</span>
+                    <ul>
+                        <li><strong>Jebakan 1:</strong> Lupa syarat Adi-Bayu → menjawab 560.</li>
+                        <li><strong>Jebakan 2:</strong> Lupa syarat "tidak lebih dari 3 perempuan" → menghitung P = 2, 3, 4, 5.</li>
+                        <li><strong>Jebakan 3:</strong> Menganggap "setidaknya 2 perempuan" berarti tepat 2 → hanya menghitung satu kasus.</li>
+                        <li><strong>Jebakan 4:</strong> Salah mengurangi kasus Adi-Bayu dengan mengalikan bukan menjumlahkan.</li>
+                    </ul>
+                </div>
+
+                <div class="why-osn-box">
+                    <span class="why-title">🏆 Mengapa Sering Muncul di OSN?</span>
+                    <p>Soal kombinasi dengan <strong>syarat ganda</strong> (minimal, maksimal, larangan) adalah
+                    genre wajib OSN. Kuncinya: <strong>enumerasi komposisi valid</strong> lalu
+                    <strong>kurangi pelanggaran</strong> dengan komplemen.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SOAL 4: PERMUTASI SIKLIS ============ -->
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="header-left">
+                    <span class="header-text">Soal 4: Makan Malam Finalis OSN yang Rumit</span>
+                    <span class="header-meta">
+                        <span class="difficulty-badge hots">HOTS</span>
+                        <span class="topic-tag">Permutasi Siklis</span>
+                        <span class="topic-tag">Komplemen</span>
+                    </span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+                <div class="story-box">
+                    <span class="story-label">📖 Cerita Soal</span>
+                    <p>Lima finalis OSN Informatika — <strong>Adi, Budi, Citra, Dewi, Eka</strong> — diundang
+                    makan malam bersama tiga juri — <strong>Pak Rudi, Bu Sari, Pak Tono</strong> — di meja bundar.
+                    Total ada <strong>8 orang</strong>. Panitia menetapkan aturan:</p>
+                    <p>(1) <strong>Adi dan Budi TIDAK BOLEH</strong> duduk berdampingan (baru bertengkar).</p>
+                    <p>(2) <strong>Citra HARUS duduk di antara dua juri</strong> (tetangga kiri dan kanannya harus juri).</p>
+                    <p>(3) Posisi melingkar dianggap sama jika hanya diputar (rotasi).</p>
+                    <div class="story-question">
+                        Berapa banyak susunan duduk yang memenuhi SEMUA aturan di atas?
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <span class="pattern-title">💭 Pola Pikir</span>
+                    <p>Dua aturan + rotasi dianggap sama. Strategi: <strong>total siklis − pelanggaran A −
+                    pelanggaran B + irisan</strong> (Inklusi-Eksklusi untuk pelanggaran). Untuk aturan
+                    "berdampingan" → teknik <strong>blok</strong>. Untuk aturan "di antara dua juri" → blok
+                    juri-Citra-juri.</p>
+                </div>
+
+                <div class="solution-box">
+                    <div class="step">
+                        <span class="step-label">LANGKAH 1 — Total susunan siklis 8 orang</span>
+                        <p>(8 − 1)! = 7! = <strong>5.040</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 2 — Pelanggaran Adi-Budi berdampingan</span>
+                        <p>Blok Adi-Budi (1 objek) + 6 orang lain = 7 objek melingkar → 6! = 720.</p>
+                        <p>Internal blok: 2 (AB atau BA).</p>
+                        <p>Total = 720 × 2 = <strong>1.440</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 3 — Pelanggaran Citra di antara dua juri</span>
+                        <p>Pilih 2 juri dari 3: C(3,2) = 3. Susun 2 juri di kiri-kanan Citra: 2! = 2.</p>
+                        <p>Anggap (juri-Citra-juri) sebagai 1 blok + 5 orang lain = 6 objek melingkar → 5! = 120.</p>
+                        <p>Total = 3 × 2 × 120 = <strong>720</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 4 — Irisan (kedua pelanggaran terjadi)</span>
+                        <p>Blok Adi-Budi + blok Citra-juri-juri + 3 orang lain = 5 objek melingkar → 4! = 24.</p>
+                        <p>Internal Adi-Budi: 2. Internal Citra-juri: 6 (3×2).</p>
+                        <p>Total = 24 × 2 × 6 = <strong>288</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 5 — Inklusi-Eksklusi</span>
+                        <p>5.040 − 1.440 − 720 + 288 = <strong>3.168 susunan</strong>.</p>
+                        <p><em>Catatan:</em> karena 3.168 tidak ada di opsi kuis, soal ini menguji proses berpikir.</p>
+                    </div>
+                </div>
+
+                <div class="trap-box">
+                    <span class="trap-title">⚠️ Analisis Jebakan</span>
+                    <ul>
+                        <li><strong>Jebakan 1:</strong> Lupa bahwa rotasi dianggap sama → memakai 8! = 40.320, bukan 7! = 5.040.</li>
+                        <li><strong>Jebakan 2:</strong> Lupa mengalikan internal blok Adi-Budi (×2).</li>
+                        <li><strong>Jebakan 3:</strong> Salah menghitung irisan karena menganggap blok Citra-juri-juri tetap 3 objek terpisah.</li>
+                        <li><strong>Jebakan 4:</strong> Lupa bahwa Citra harus di antara DUA juri, bukan sembarang dua orang.</li>
+                        <li><strong>Jebakan 5:</strong> Lupa menambahkan kembali irisan di langkah PIE.</li>
+                    </ul>
+                </div>
+
+                <div class="why-osn-box">
+                    <span class="why-title">🏆 Mengapa Sering Muncul di OSN?</span>
+                    <p>Permutasi siklis dengan <strong>dua aturan yang beririsan</strong> adalah soal HOTS klasik.
+                    Menguji penguasaan teknik blok, komplemen, dan PIE secara bersamaan.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SOAL 5: INKLUSI-EKSKLUSI ============ -->
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="header-left">
+                    <span class="header-text">Soal 5: Survei Minat Mahasiswa yang Berlapis</span>
+                    <span class="header-meta">
+                        <span class="difficulty-badge hots">HOTS</span>
+                        <span class="topic-tag">Inklusi-Eksklusi</span>
+                        <span class="topic-tag">Komplemen</span>
+                    </span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+                <div class="story-box">
+                    <span class="story-label">📖 Cerita Soal</span>
+                    <p>Universitas memiliki <strong>1.000 mahasiswa baru</strong> Informatika. Dari survei minat:
+                    <strong>600</strong> menyukai AI, <strong>450</strong> menyukai Cybersecurity,
+                    <strong>300</strong> menyukai Web. Sebanyak <strong>250</strong> menyukai AI dan
+                    Cybersecurity, <strong>150</strong> menyukai AI dan Web, <strong>100</strong> menyukai
+                    Cybersecurity dan Web. Sebanyak <strong>50</strong> menyukai KETIGANYA.</p>
+                    <p>Universitas ingin membentuk komunitas yang menyukai <strong>SETIDAKNYA SATU</strong>
+                    bidang, tetapi <strong>TIDAK ingin melibatkan</strong> mahasiswa yang menyukai ketiganya
+                    sekaligus (mereka sudah punya komunitas khusus).</p>
+                    <div class="story-question">
+                        Berapa banyak mahasiswa yang akan direkrut ke komunitas baru?
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <span class="pattern-title">💭 Pola Pikir</span>
+                    <p>Kata "SETIDAKNYA SATU" → gabungan → <strong>PIE</strong>. Kata "TIDAK ketiganya" →
+                    <strong>komplemen</strong> → kurangi irisan bertiga. Jangan terkecoh oleh angka 1.000 —
+                    itu hanya total mahasiswa, bukan jawaban.</p>
+                </div>
+
+                <div class="solution-box">
+                    <div class="step">
+                        <span class="step-label">LANGKAH 1 — Hitung |A∪B∪C| dengan PIE</span>
+                        <p>|A|+|B|+|C| = 600 + 450 + 300 = 1.350.</p>
+                        <p>|A∩B|+|A∩C|+|B∩C| = 250 + 150 + 100 = 500.</p>
+                        <p>|A∩B∩C| = 50.</p>
+                        <p>|A∪B∪C| = 1.350 − 500 + 50 = <strong>900</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 2 — Kurangi yang menyukai ketiganya</span>
+                        <p>Komunitas baru = SETIDAKNYA SATU − KETIGANYA = 900 − 50 = <strong>850</strong>.</p>
+                        <p><span class="answer-highlight">850 mahasiswa</span></p>
+                    </div>
+                </div>
+
+                <div class="trap-box">
+                    <span class="trap-title">⚠️ Analisis Jebakan</span>
+                    <ul>
+                        <li><strong>Jebakan 1:</strong> Menjawab 900 — lupa mengurangi yang menyukai ketiganya.</li>
+                        <li><strong>Jebakan 2:</strong> Menjawab 800 — salah menghitung PIE (lupa menambahkan irisan bertiga).</li>
+                        <li><strong>Jebakan 3:</strong> Menjawab 750 — mengira "tidak ketiganya" berarti mengurangi dua kali.</li>
+                        <li><strong>Jebakan 4:</strong> Menjawab 1.000 — mengira semua mahasiswa direkrut.</li>
+                    </ul>
+                </div>
+
+                <div class="why-osn-box">
+                    <span class="why-title">🏆 Mengapa Sering Muncul di OSN?</span>
+                    <p>Soal PIE tiga himpunan dengan <strong>syarat tambahan</strong> ("tidak ketiganya") adalah
+                    genre wajib OSK. Kuncinya: hitung gabungan dulu, baru terapkan komplemen.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SOAL 6: PIGEONHOLE ============ -->
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="header-left">
+                    <span class="header-text">Soal 6: Perpustakaan yang Hampir Penuh</span>
+                    <span class="header-meta">
+                        <span class="difficulty-badge hots">HOTS</span>
+                        <span class="topic-tag">Pigeonhole</span>
+                        <span class="topic-tag">Kontrapositif</span>
+                    </span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+                <div class="story-box">
+                    <span class="story-label">📖 Cerita Soal</span>
+                    <p>Perpustakaan memiliki <strong>500 buku</strong> Informatika yang diklasifikasikan ke
+                    <strong>8 kategori</strong>: Algoritma, Struktur Data, Jaringan, Basis Data, AI, Keamanan,
+                    Pemrograman, dan Teori Komputasi. Setiap buku tepat satu kategori.</p>
+                    <p>Pustakawan ingin menyusun buku ke <strong>8 rak</strong>, setiap rak khusus satu kategori.
+                    Karena ruang terbatas, <strong>setiap rak maksimal 60 buku</strong>. Ia ingin memastikan
+                    bahwa dengan 500 buku dan 8 rak, <strong>PASTI</strong> ada setidaknya satu rak yang berisi
+                    lebih dari 60 buku — sehingga ia perlu menambah rak.</p>
+                    <div class="story-question">
+                        Berdasarkan Prinsip Sarang Merpati, berapa jumlah MINIMAL buku yang harus ada agar
+                        PASTI ada satu rak berisi lebih dari 60 buku (dengan 8 rak, maksimal 60 per rak)?
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <span class="pattern-title">💭 Pola Pikir</span>
+                    <p>Kata "PASTI ada rak &gt; 60" → cari batas kontrapositif: berapa total maksimal buku
+                    jika <em>semua</em> rak ≤ 60? Jawabannya 8 × 60 = 480. Maka <strong>satu buku lebihnya</strong>
+                    (481) memaksa salah satu rak melebihi 60.</p>
+                </div>
+
+                <div class="solution-box">
+                    <div class="step">
+                        <span class="step-label">LANGKAH 1 — Batas maksimal tanpa pelanggaran</span>
+                        <p>Jika semua 8 rak berisi maksimal 60, total maksimal = 8 × 60 = <strong>480 buku</strong>.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 2 — Terapkan Pigeonhole versi kontrapositif</span>
+                        <p>Dengan 481 buku: ⌈481/8⌉ = ⌈60,125⌉ = 61. Jadi pasti ada rak berisi ≥ 61 buku.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">KESIMPULAN</span>
+                        <p>Jumlah minimal = 480 + 1 = <span class="answer-highlight">481 buku</span></p>
+                    </div>
+                </div>
+
+                <div class="trap-box">
+                    <span class="trap-title">⚠️ Analisis Jebakan</span>
+                    <ul>
+                        <li><strong>Jebakan 1:</strong> Menjawab 480 — itu batas MAKSIMAL agar TIDAK ada rak &gt; 60, bukan minimal agar PASTI ada.</li>
+                        <li><strong>Jebakan 2:</strong> Menjawab 500 — angka di cerita, bukan jawaban.</li>
+                        <li><strong>Jebakan 3:</strong> Menjawab 488 — salah menghitung 8 × 61 = 488, padahal yang diminta 480 + 1 = 481.</li>
+                        <li><strong>Jebakan 4:</strong> Menjawab 420 — salah mengalikan (misalnya 7 × 60).</li>
+                    </ul>
+                </div>
+
+                <div class="why-osn-box">
+                    <span class="why-title">🏆 Mengapa Sering Muncul di OSN?</span>
+                    <p>Soal "paling sedikit agar pasti" adalah penerapan langsung Pigeonhole kontrapositif.
+                    Di OSN, sering disamarkan sebagai "berapa kapasitas minimum", "berapa banyak data agar
+                    pasti ada kolisi", dll.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ SOAL 7: TEOREMA BINOMIAL ============ -->
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="header-left">
+                    <span class="header-text">Soal 7: Kriptografi Kuantum dan Tanda Negatif</span>
+                    <span class="header-meta">
+                        <span class="difficulty-badge hots">HOTS</span>
+                        <span class="topic-tag">Teorema Binomial</span>
+                    </span>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+                <div class="story-box">
+                    <span class="story-label">📖 Cerita Soal</span>
+                    <p>Seorang peneliti di laboratorium kriptografi kuantum menganalisis ekspresi
+                    <strong>(2x − 3y)⁷</strong> yang muncul dalam protokol enkripsi. Ia perlu menentukan
+                    <strong>koefisien suku x⁴y³</strong>. Namun, ia menyadari tanda koefisien bisa positif
+                    atau negatif tergantung posisi suku. Ia juga perlu memastikan perhitungannya konsisten
+                    dengan Teorema Binomial, di mana suku umum adalah C(n,k)·aⁿ⁻ᵏ·bᵏ.</p>
+                    <div class="story-question">
+                        Berapa koefisien dari suku x⁴y³ pada ekspansi (2x − 3y)⁷?
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <span class="pattern-title">💭 Pola Pikir</span>
+                    <p>Gunakan suku umum Teorema Binomial. Kunci: <strong>k = pangkat y</strong> (variabel
+                    kedua), lalu hitung C(n,k) × (koefisien a)ⁿ⁻ᵏ × (koefisien b)ᵏ. Jangan lupa tanda
+                    negatif pada b = −3!</p>
+                </div>
+
+                <div class="solution-box">
+                    <div class="step">
+                        <span class="step-label">LANGKAH 1 — Tentukan k</span>
+                        <p>Suku umum: C(7,k)·(2x)^(7−k)·(−3y)^k.</p>
+                        <p>Untuk x⁴y³, pangkat y = 3 → k = 3. Cek pangkat x: 7−3 = 4 ✓.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 2 — Hitung tiap faktor</span>
+                        <p>C(7,3) = 35.</p>
+                        <p>(2x)⁴ → koefisien 2⁴ = 16.</p>
+                        <p>(−3y)³ → koefisien (−3)³ = −27.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-label">LANGKAH 3 — Kalikan</span>
+                        <p>35 × 16 × (−27) = 35 × (−432) = <span class="answer-highlight">−15.120</span></p>
+                    </div>
+                </div>
+
+                <div class="trap-box">
+                    <span class="trap-title">⚠️ Analisis Jebakan</span>
+                    <ul>
+                        <li><strong>Jebakan 1:</strong> Lupa tanda negatif karena (−3)³ = −27 → menjawab +15.120.</li>
+                        <li><strong>Jebakan 2:</strong> Lupa memangkatkan −3 → memakai 3³ = 27.</li>
+                        <li><strong>Jebakan 3:</strong> Salah indeks k → memakai k = 2 (menghitung x⁵y²).</li>
+                        <li><strong>Jebakan 4:</strong> Mengira koefisien selalu positif.</li>
+                    </ul>
+                </div>
+
+                <div class="why-osn-box">
+                    <span class="why-title">🏆 Mengapa Sering Muncul di OSN?</span>
+                    <p>Soal binomial dengan <strong>tanda negatif</strong> adalah jebakan favorit. Di OSN,
+                    sering muncul dalam soal probabilitas binomial atau pencarian koefisien suku tertentu.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ==================== PANEL GAME LAB MAYA ==================== -->
+    <section class="panel" id="game" role="tabpanel" aria-labelledby="tab-game">
+        <h2 class="panel-title"><span class="emoji" aria-hidden="true">🎮</span> Game Lab Maya: 3 Mini-Game Interaktif</h2>
+        <p class="panel-subtitle">
+            Tiga mini-game edukatif yang terhubung langsung dengan materi. Mainkan, amati, dan pahami
+            konsep kombinatorika secara visual dan interaktif!
+        </p>
+
+        <div class="game-lab-container">
+
+            <div class="game-tabs" role="tablist" aria-label="Pilih Mini-Game">
+                <button class="game-tab active" data-game="game-pigeonhole" role="tab" aria-selected="true">
+                    <span class="tab-emoji" aria-hidden="true">🐦</span> Simulator Pigeonhole
+                </button>
+                <button class="game-tab" data-game="game-password" role="tab" aria-selected="false">
+                    <span class="tab-emoji" aria-hidden="true">🔐</span> Perakit Password
+                </button>
+                <button class="game-tab" data-game="game-combo" role="tab" aria-selected="false">
+                    <span class="tab-emoji" aria-hidden="true">🎯</span> Petualangan Kombinasi
+                </button>
+            </div>
+
+            <!-- GAME 1 -->
+            <div class="game-panel active" id="game-pigeonhole">
+                <div class="game-title">🐦 Simulator Prinsip Sarang Merpati</div>
+                <div class="game-desc">
+                    Atur jumlah merpati dan sarang, lalu saksikan merpati terbang. Jika merpati &gt; sarang,
+                    pasti ada sarang berisi lebih dari satu merpati!
+                </div>
+                <div class="game-input-group">
+                    <div class="input-field">
+                        <label for="inputPigeons">Jumlah Merpati</label>
+                        <input type="number" id="inputPigeons" min="1" max="30" value="7" aria-label="Jumlah Merpati">
+                    </div>
+                    <div class="input-field">
+                        <label for="inputNests">Jumlah Sarang</label>
+                        <input type="number" id="inputNests" min="1" max="12" value="5" aria-label="Jumlah Sarang">
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <button class="btn btn-primary" id="btnFlyPigeons">🐦 Terbangkan Merpati!</button>
+                    <button class="btn btn-secondary" id="btnResetPigeons">🔄 Reset</button>
+                </div>
+                <div class="nests-visual" id="nestsVisual" aria-live="polite"></div>
+                <div class="game-feedback" id="pigeonFeedback" role="status"></div>
+                <div class="concept-box">
+                    <div class="concept-title">💡 Konsep di Balik Game</div>
+                    <p>Jika ada n merpati dan k sarang dengan n &gt; k, maka minimal satu sarang berisi
+                    ⌈n/k⌉ merpati. Prinsip ini menjamin keberadaan tanpa harus menemukan sarangnya!</p>
+                </div>
+            </div>
+
+            <!-- GAME 2 -->
+            <div class="game-panel" id="game-password">
+                <div class="game-title">🔐 Perakit Password</div>
+                <div class="game-desc">
+                    Susun password 4 karakter sesuai aturan yang berubah setiap level. Hitung sendiri berapa
+                    kombinasi yang mungkin sebelum mengisi!
+                </div>
+                <div class="password-rules" id="passwordRules"></div>
+                <div class="password-stats">
+                    <div class="pass-stat">
+                        <div class="label">Level</div>
+                        <div class="value" id="passLevel">1</div>
+                    </div>
+                    <div class="pass-stat">
+                        <div class="label">Kombinasi Teoretis</div>
+                        <div class="value" id="passTheoretical">-</div>
+                    </div>
+                    <div class="pass-stat">
+                        <div class="label">Tebakanmu</div>
+                        <div class="value" id="passGuess">0</div>
+                    </div>
+                </div>
+                <div class="password-display" id="passwordDisplay" aria-label="Password yang sedang disusun"></div>
+                <div class="password-pool" id="passwordPool" aria-label="Karakter yang tersedia"></div>
+                <div class="game-controls">
+                    <button class="btn btn-secondary" id="btnPassClear">🗑️ Hapus</button>
+                    <button class="btn btn-success" id="btnPassSubmit">✅ Cek Password</button>
+                    <button class="btn btn-primary" id="btnPassNext">➡️ Level Berikutnya</button>
+                </div>
+                <div class="game-feedback" id="passFeedback" role="status"></div>
+                <div class="concept-box">
+                    <div class="concept-title">💡 Konsep di Balik Game</div>
+                    <p>Setiap aturan password adalah penerapan aturan perkalian: hitung pilihan di setiap
+                    posisi, lalu kalikan. Jika ada larangan, kurangi pilihan di posisi itu.</p>
+                </div>
+            </div>
+
+            <!-- GAME 3 -->
+            <div class="game-panel" id="game-combo">
+                <div class="game-title">🎯 Petualangan Kombinasi</div>
+                <div class="game-desc">
+                    Pilih kombinasi bola berwarna untuk mencapai target. Setiap level memiliki target berbeda.
+                    Hitung dulu berapa kombinasi valid yang mungkin, lalu buktikan!
+                </div>
+                <div class="ball-target" id="ballTarget"></div>
+                <div class="ball-selected-info" id="ballInfo">Klik bola untuk memilih</div>
+                <div class="balls-stage" id="ballsStage" aria-label="Bola yang tersedia"></div>
+                <div class="ball-controls">
+                    <button class="btn btn-secondary" id="btnBallReset">🔄 Reset Pilihan</button>
+                    <button class="btn btn-success" id="btnBallCheck">✅ Cek Kombinasi</button>
+                    <button class="btn btn-primary" id="btnBallNext">➡️ Level Berikutnya</button>
+                </div>
+                <div class="game-feedback" id="ballFeedback" role="status"></div>
+                <div class="concept-box">
+                    <div class="concept-title">💡 Konsep di Balik Game</div>
+                    <p>Banyaknya cara memilih r bola dari n bola adalah C(n, r) = n!/[r!(n−r)!]. Jika ada
+                    syarat warna, gunakan aturan perkalian per warna.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==================== PANEL KUIS ==================== -->
+    <section class="panel" id="kuis" role="tabpanel" aria-labelledby="tab-kuis">
+        <h2 class="panel-title"><span class="emoji" aria-hidden="true">🎯</span> Kuis Olimpiade: 10 Soal Cerita Bergaya OSN</h2>
+        <p class="panel-subtitle">
+            Sepuluh soal pilihan ganda (A–E) dengan cerita panjang dan bahasa menjebak khas OSN.
+            Baca setiap detail dengan teliti — beberapa informasi sengaja mengecoh! Skor maksimal 100.
+        </p>
+
+        <div id="quizContent">
+            <div class="quiz-progress">
+                <div class="quiz-progress-bar" id="quizProgressBar"></div>
+            </div>
+            <div class="quiz-header">
+                <span class="quiz-counter" id="quizCounter">Soal 1 / 10</span>
+                <span class="quiz-score" id="quizScoreDisplay">Skor: 0</span>
+            </div>
+            <div class="quiz-story" id="quizStory"></div>
+            <div class="quiz-question" id="quizQuestion"></div>
+            <div class="quiz-question-meta" id="quizQuestionMeta"></div>
+            <div class="quiz-options" id="quizOptions" role="radiogroup" aria-label="Pilihan Jawaban"></div>
+            <div class="quiz-explanation" id="quizExplanation" role="status"></div>
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="btnCheckAnswer" style="display:none;">✅ Cek Jawaban</button>
+                <button class="btn btn-primary" id="btnNextQuestion" style="display:none;">Soal Berikutnya →</button>
+            </div>
+        </div>
+
+        <div class="quiz-result" id="quizResult">
+            <div class="result-emoji" id="resultEmoji">🎉</div>
+            <div class="result-title" id="resultTitle">Kuis Selesai!</div>
+            <div class="result-score" id="resultScore">0 / 100</div>
+            <div class="result-message" id="resultMessage"></div>
+            <button class="btn btn-primary" id="btnRestartQuiz">🔄 Ulangi Kuis</button>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    MPI OSN Informatika &copy; 2025 — Dibuat dengan <span class="heart" aria-hidden="true">❤</span> untuk persiapan Olimpiade Sains Nasional
+</footer>
+
+<script>
+'use strict';
+
+/* ============================================================
+   1. NAVIGASI TAB
+   ============================================================ */
+(function initTabNavigation() {
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.panel');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetId = tab.dataset.target;
+            tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            panels.forEach(panel => {
+                panel.classList.remove('active');
+                if (panel.id === targetId) { panel.classList.add('active'); void panel.offsetWidth; }
+            });
+        });
+    });
+})();
+
+/* ============================================================
+   2. MATERI — SUB-TOPIK ACCORDION
+   ============================================================ */
+(function initSubtopicAccordion() {
+    const cards = document.querySelectorAll('.subtopic-card');
+    cards.forEach(card => {
+        const header = card.querySelector('.subtopic-header');
+        header.addEventListener('click', () => {
+            const isOpen = card.classList.contains('open');
+            cards.forEach(c => c.classList.remove('open'));
+            if (!isOpen) card.classList.add('open');
+        });
+        header.setAttribute('role', 'button');
+        header.setAttribute('tabindex', '0');
+        header.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); header.click(); }
+        });
+    });
+})();
+
+/* ============================================================
+   3. CONTOH SOAL — ACCORDION
+   ============================================================ */
+(function initExampleAccordion() {
+    const items = document.querySelectorAll('.accordion-item');
+    items.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        header.addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
+            items.forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        });
+        header.setAttribute('role', 'button');
+        header.setAttribute('tabindex', '0');
+        header.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); header.click(); }
+        });
+    });
+})();
+
+/* ============================================================
+   4. GAME LAB MAYA — TAB INTERNAL
+   ============================================================ */
+(function initGameTabs() {
+    const gameTabs = document.querySelectorAll('.game-tab');
+    const gamePanels = document.querySelectorAll('.game-panel');
+    gameTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetId = tab.dataset.game;
+            gameTabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            gamePanels.forEach(panel => {
+                panel.classList.remove('active');
+                if (panel.id === targetId) { panel.classList.add('active'); void panel.offsetWidth; }
+            });
+        });
+    });
+})();
+
+/* ============================================================
+   5. GAME 1: SIMULATOR PIGEONHOLE
+   ============================================================ */
+(function initPigeonholeGame() {
+    const MAX_PIGEONS = 30;
+    const MAX_NESTS = 12;
+    const inputPigeons = document.getElementById('inputPigeons');
+    const inputNests = document.getElementById('inputNests');
+    const btnFly = document.getElementById('btnFlyPigeons');
+    const btnReset = document.getElementById('btnResetPigeons');
+    const nestsVisual = document.getElementById('nestsVisual');
+    const feedback = document.getElementById('pigeonFeedback');
+    let isAnimating = false;
+
+    function createNests(count) {
+        nestsVisual.innerHTML = '';
+        const nests = [];
+        for (let i = 0; i < count; i++) {
+            const nest = document.createElement('div');
+            nest.className = 'nest';
+            nest.dataset.index = i;
+            const label = document.createElement('div');
+            label.className = 'nest-label';
+            label.textContent = `Sarang ${i + 1}`;
+            const pigeonsContainer = document.createElement('div');
+            pigeonsContainer.className = 'pigeons-container';
+            pigeonsContainer.style.display = 'flex';
+            pigeonsContainer.style.flexWrap = 'wrap';
+            pigeonsContainer.style.justifyContent = 'center';
+            pigeonsContainer.style.gap = '2px';
+            pigeonsContainer.style.flex = '1';
+            const countLabel = document.createElement('div');
+            countLabel.className = 'nest-count';
+            countLabel.textContent = '0 ekor';
+            nest.appendChild(label);
+            nest.appendChild(pigeonsContainer);
+            nest.appendChild(countLabel);
+            nestsVisual.appendChild(nest);
+            nests.push(nest);
+        }
+        return nests;
+    }
+
+    function showFeedback(message, type) {
+        feedback.textContent = message;
+        feedback.className = `game-feedback show ${type}`;
+    }
+    function hideFeedback() {
+        feedback.className = 'game-feedback';
+        feedback.textContent = '';
+    }
+
+    function readInputs() {
+        let pigeons = parseInt(inputPigeons.value, 10);
+        let nests = parseInt(inputNests.value, 10);
+        if (isNaN(pigeons) || pigeons < 1) { showFeedback('⚠️ Jumlah merpati minimal 1.', 'warning'); return null; }
+        if (isNaN(nests) || nests < 1) { showFeedback('⚠️ Jumlah sarang minimal 1.', 'warning'); return null; }
+        if (pigeons > MAX_PIGEONS) { pigeons = MAX_PIGEONS; inputPigeons.value = MAX_PIGEONS; }
+        if (nests > MAX_NESTS) { nests = MAX_NESTS; inputNests.value = MAX_NESTS; }
+        return { pigeons, nests };
+    }
+
+    async function flyPigeons() {
+        if (isAnimating) return;
+        const input = readInputs();
+        if (!input) return;
+        const { pigeons, nests } = input;
+        isAnimating = true;
+        btnFly.disabled = true;
+        btnReset.disabled = true;
+        hideFeedback();
+        const nestElements = createNests(nests);
+        const nestCounts = new Array(nests).fill(0);
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        for (let p = 0; p < pigeons; p++) {
+            const nestIndex = p % nests;
+            const nest = nestElements[nestIndex];
+            const container = nest.querySelector('.pigeons-container');
+            const countLabel = nest.querySelector('.nest-count');
+            const pigeonIcon = document.createElement('span');
+            pigeonIcon.className = 'pigeon';
+            pigeonIcon.textContent = '🐦';
+            pigeonIcon.setAttribute('aria-hidden', 'true');
+            container.appendChild(pigeonIcon);
+            nestCounts[nestIndex]++;
+            countLabel.textContent = `${nestCounts[nestIndex]} ekor`;
+            nest.classList.add('highlight-nest');
+            await sleep(180);
+            nest.classList.remove('highlight-nest');
+            await sleep(60);
+        }
+        await sleep(300);
+        const maxInNest = Math.max(...nestCounts);
+        const maxIndex = nestCounts.indexOf(maxInNest);
+        if (maxIndex >= 0 && maxInNest > 1) nestElements[maxIndex].classList.add('highlight-nest');
+        if (pigeons > nests) {
+            const minG = Math.ceil(pigeons / nests);
+            showFeedback(
+                `✅ Pigeonhole berlaku! ${pigeons} merpati > ${nests} sarang → pasti ada sarang berisi ≥ ` +
+                `⌈${pigeons}/${nests}⌉ = ${minG} merpati. Sarang terbanyak: ${maxInNest} merpati.`, 'success');
+        } else if (pigeons === nests) {
+            showFeedback(`ℹ️ Merpati = sarang (${pigeons}). Pigeonhole tidak menjamin sarang > 1, tetapi bisa terjadi.`, 'info');
+        } else {
+            showFeedback(`ℹ️ Merpati (${pigeons}) ≤ sarang (${nests}). Pigeonhole tidak berlaku.`, 'info');
+        }
+        isAnimating = false;
+        btnFly.disabled = false;
+        btnReset.disabled = false;
+    }
+
+    function resetGame() {
+        if (isAnimating) return;
+        nestsVisual.innerHTML = '';
+        hideFeedback();
+        inputPigeons.value = 7;
+        inputNests.value = 5;
+        btnFly.disabled = false;
+        btnReset.disabled = false;
+    }
+
+    btnFly.addEventListener('click', flyPigeons);
+    btnReset.addEventListener('click', resetGame);
+    [inputPigeons, inputNests].forEach(input => {
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); flyPigeons(); } });
+    });
+    resetGame();
+})();
+
+/* ============================================================
+   6. GAME 2: PERAKIT PASSWORD
+   ============================================================ */
+(function initPasswordGame() {
+    const levels = [
+        {
+            rules: [
+                'Password terdiri dari <strong>4 karakter</strong>.',
+                'Karakter 1: huruf kapital (A–E).',
+                'Karakter 2: angka 1–4.',
+                'Karakter 3: huruf kapital (A–E), <strong>boleh sama</strong> dengan karakter 1.',
+                'Karakter 4: simbol dari {!, @, #}.'
+            ],
+            pool: ['A','B','C','D','E','1','2','3','4','!','@','#'],
+            slots: [{ type: 'letter' }, { type: 'digit' }, { type: 'letter' }, { type: 'symbol' }],
+            theoretical: 5 * 4 * 5 * 3,
+            theoreticalText: '5 × 4 × 5 × 3 = 300',
+            explanation: 'Posisi 1: 5 huruf. Posisi 2: 4 angka. Posisi 3: 5 huruf (boleh sama). Posisi 4: 3 simbol. Total = 300.'
+        },
+        {
+            rules: [
+                'Password terdiri dari <strong>4 karakter</strong>.',
+                'Karakter 1: angka 1–5.',
+                'Karakter 2: huruf kapital (A–C).',
+                'Karakter 3: angka 1–5, <strong>harus berbeda</strong> dari karakter 1.',
+                'Karakter 4: huruf kapital (A–C), <strong>boleh sama</strong> dengan karakter 2.'
+            ],
+            pool: ['1','2','3','4','5','A','B','C'],
+            slots: [{ type: 'digit' }, { type: 'letter' }, { type: 'digit' }, { type: 'letter' }],
+            theoretical: 5 * 3 * 4 * 3,
+            theoreticalText: '5 × 3 × 4 × 3 = 180',
+            explanation: 'Posisi 1: 5 angka. Posisi 2: 3 huruf. Posisi 3: 4 angka (tidak boleh sama dengan posisi 1). Posisi 4: 3 huruf (boleh sama). Total = 180.'
+        },
+        {
+            rules: [
+                'Password terdiri dari <strong>4 karakter</strong>.',
+                'Karakter 1: huruf vokal (A, I, U).',
+                'Karakter 2: huruf konsonan (B, C, D).',
+                'Karakter 3: angka 1–3.',
+                'Karakter 4: huruf vokal, <strong>harus berbeda</strong> dari karakter 1.'
+            ],
+            pool: ['A','I','U','B','C','D','1','2','3'],
+            slots: [{ type: 'vowel' }, { type: 'consonant' }, { type: 'digit' }, { type: 'vowel2' }],
+            theoretical: 3 * 3 * 3 * 2,
+            theoreticalText: '3 × 3 × 3 × 2 = 54',
+            explanation: 'Posisi 1: 3 vokal. Posisi 2: 3 konsonan. Posisi 3: 3 angka. Posisi 4: 2 vokal (tidak boleh sama dengan posisi 1). Total = 54.'
+        }
+    ];
+
+    let currentLevel = 0;
+    let password = [];
+    const rulesEl = document.getElementById('passwordRules');
+    const displayEl = document.getElementById('passwordDisplay');
+    const poolEl = document.getElementById('passwordPool');
+    const levelEl = document.getElementById('passLevel');
+    const theoreticalEl = document.getElementById('passTheoretical');
+    const guessEl = document.getElementById('passGuess');
+    const feedbackEl = document.getElementById('passFeedback');
+    const btnClear = document.getElementById('btnPassClear');
+    const btnSubmit = document.getElementById('btnPassSubmit');
+    const btnNext = document.getElementById('btnPassNext');
+    let guessCount = 0;
+    let solved = false;
+
+    const VOWELS = ['A','I','U','E','O'];
+    const CONSONANTS = ['B','C','D','F','G','H'];
+
+    function getSlotCategory(char, type) {
+        if (type === 'letter') return /[A-Z]/.test(char);
+        if (type === 'digit') return /[0-9]/.test(char);
+        if (type === 'symbol') return /[!@#]/.test(char);
+        if (type === 'vowel') return VOWELS.includes(char);
+        if (type === 'consonant') return CONSONANTS.includes(char);
+        if (type === 'vowel2') return VOWELS.includes(char);
+        return true;
+    }
+
+    function renderLevel() {
+        const level = levels[currentLevel];
+        solved = false;
+        password = [];
+        guessCount = 0;
+        guessEl.textContent = '0';
+        theoreticalEl.textContent = level.theoretical;
+        levelEl.textContent = currentLevel + 1;
+        rulesEl.innerHTML = `<strong>📋 Aturan Level ${currentLevel + 1}:</strong><ul>${level.rules.map(r => `<li>${r}</li>`).join('')}</ul>`;
+        displayEl.innerHTML = '';
+        const slotRules = ['Kapital', 'Angka', 'Kapital', 'Simbol'];
+        level.slots.forEach((slot, i) => {
+            const slotEl = document.createElement('div');
+            slotEl.className = 'pass-slot';
+            slotEl.dataset.index = i;
+            slotEl.textContent = '?';
+            const ruleEl = document.createElement('span');
+            ruleEl.className = 'slot-rule';
+            ruleEl.textContent = slotRules[i] || '';
+            slotEl.appendChild(ruleEl);
+            displayEl.appendChild(slotEl);
+        });
+        poolEl.innerHTML = '';
+        level.pool.forEach((char, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'char-btn';
+            btn.textContent = char;
+            btn.dataset.charIndex = i;
+            btn.addEventListener('click', () => handleCharClick(i, char));
+            poolEl.appendChild(btn);
+        });
+        feedbackEl.className = 'game-feedback';
+        feedbackEl.textContent = '';
+        btnSubmit.disabled = false;
+    }
+
+    function handleCharClick(charIndex, char) {
+        if (solved) return;
+        const level = levels[currentLevel];
+        if (password.length >= level.slots.length) return;
+        const slotType = level.slots[password.length].type;
+        if (!getSlotCategory(char, slotType)) {
+            feedbackEl.textContent = `❌ Karakter "${char}" tidak valid untuk posisi ${password.length + 1}.`;
+            feedbackEl.className = 'game-feedback show error';
+            return;
+        }
+        if (currentLevel === 1 && password.length === 2 && password[0] === char) {
+            feedbackEl.textContent = `❌ Angka posisi 3 harus berbeda dari angka posisi 1 (${password[0]}).`;
+            feedbackEl.className = 'game-feedback show error';
+            return;
+        }
+        if (currentLevel === 2 && password.length === 3 && password[0] === char) {
+            feedbackEl.textContent = `❌ Vokal posisi 4 harus berbeda dari vokal posisi 1 (${password[0]}).`;
+            feedbackEl.className = 'game-feedback show error';
+            return;
+        }
+        password.push(char);
+        const slotEl = displayEl.children[password.length - 1];
+        slotEl.textContent = char;
+        slotEl.classList.add('filled');
+        feedbackEl.className = 'game-feedback';
+        feedbackEl.textContent = '';
+        if (password.length === level.slots.length) btnSubmit.disabled = false;
+    }
+
+    function clearPassword() {
+        if (solved) return;
+        password = [];
+        guessCount = 0;
+        guessEl.textContent = '0';
+        displayEl.querySelectorAll('.pass-slot').forEach((slot, i) => {
+            slot.textContent = '?';
+            slot.classList.remove('filled', 'valid', 'invalid');
+            const ruleEl = document.createElement('span');
+            ruleEl.className = 'slot-rule';
+            ruleEl.textContent = ['Kapital', 'Angka', 'Kapital', 'Simbol'][i] || '';
+            slot.appendChild(ruleEl);
+        });
+        feedbackEl.className = 'game-feedback';
+        feedbackEl.textContent = '';
+        btnSubmit.disabled = false;
+    }
+
+    function submitPassword() {
+        if (solved) return;
+        const level = levels[currentLevel];
+        if (password.length < level.slots.length) {
+            feedbackEl.textContent = '⚠️ Password belum lengkap!';
+            feedbackEl.className = 'game-feedback show warning';
+            return;
+        }
+        let valid = true;
+        let errors = [];
+        level.slots.forEach((slot, i) => {
+            if (!getSlotCategory(password[i], slot.type)) { valid = false; errors.push(`Posisi ${i + 1} tidak valid.`); }
+        });
+        if (currentLevel === 1 && password[0] === password[2]) { valid = false; errors.push('Angka posisi 1 dan 3 tidak boleh sama.'); }
+        if (currentLevel === 2 && password[0] === password[3]) { valid = false; errors.push('Vokal posisi 1 dan 4 tidak boleh sama.'); }
+        guessCount++;
+        guessEl.textContent = guessCount;
+        const slots = displayEl.querySelectorAll('.pass-slot');
+        if (valid) {
+            slots.forEach(s => s.classList.add('valid'));
+            solved = true;
+            feedbackEl.innerHTML = `🎉 <strong>Password valid!</strong> Kamu berhasil dalam ${guessCount} percobaan. ` +
+                `Total kombinasi teoretis: <strong>${level.theoreticalText}</strong>. ${level.explanation}`;
+            feedbackEl.className = 'game-feedback show success';
+        } else {
+            slots.forEach(s => {
+                s.classList.remove('valid');
+                s.classList.add('invalid');
+                setTimeout(() => s.classList.remove('invalid'), 600);
+            });
+            feedbackEl.innerHTML = `❌ Password belum valid: ${errors.join(' ')} Coba lagi!`;
+            feedbackEl.className = 'game-feedback show error';
+        }
+    }
+
+    function nextLevel() {
+        if (currentLevel < levels.length - 1) {
+            currentLevel++;
+            renderLevel();
+        } else {
+            feedbackEl.innerHTML = `🏆 <strong>Selamat! Kamu menyelesaikan semua level Perakit Password!</strong> ` +
+                `Kamu telah berlatih aturan perkalian dan permutasi dengan berbagai batasan.`;
+            feedbackEl.className = 'game-feedback show success';
+            btnNext.disabled = true;
+        }
+    }
+
+    btnClear.addEventListener('click', clearPassword);
+    btnSubmit.addEventListener('click', submitPassword);
+    btnNext.addEventListener('click', nextLevel);
+    renderLevel();
+})();
+
+/* ============================================================
+   7. GAME 3: PETUALANGAN KOMBINASI
+   ============================================================ */
+(function initComboGame() {
+    const levels = [
+        {
+            target: 'Pilih tepat <strong>2 bola merah</strong> dari 4 bola merah yang tersedia.',
+            balls: [
+                { color: 'red', emoji: '🔴' }, { color: 'red', emoji: '🔴' },
+                { color: 'red', emoji: '🔴' }, { color: 'red', emoji: '🔴' },
+                { color: 'blue', emoji: '🔵' }, { color: 'blue', emoji: '🔵' },
+                { color: 'green', emoji: '🟢' }
+            ],
+            check: (s) => s.filter(c => c === 'red').length === 2,
+            theoretical: 'C(4,2) = 6 cara',
+            explanation: 'Memilih 2 dari 4 bola merah: C(4,2) = 4!/(2!·2!) = 6 cara.',
+            hint: 'Klik 2 bola merah saja, lalu Cek Kombinasi.'
+        },
+        {
+            target: 'Pilih <strong>1 bola biru</strong> dan <strong>1 bola hijau</strong>.',
+            balls: [
+                { color: 'blue', emoji: '🔵' }, { color: 'blue', emoji: '🔵' }, { color: 'blue', emoji: '🔵' },
+                { color: 'green', emoji: '🟢' }, { color: 'green', emoji: '🟢' },
+                { color: 'red', emoji: '🔴' }, { color: 'yellow', emoji: '🟡' }
+            ],
+            check: (s) => s.filter(c => c === 'blue').length === 1 && s.filter(c => c === 'green').length === 1,
+            theoretical: 'C(3,1) × C(2,1) = 3 × 2 = 6 cara',
+            explanation: 'Pilih 1 biru dari 3: C(3,1) = 3. Pilih 1 hijau dari 2: C(2,1) = 2. Total = 6.',
+            hint: 'Klik tepat 1 bola biru dan 1 bola hijau.'
+        },
+        {
+            target: 'Pilih <strong>3 bola</strong> dengan syarat: minimal 1 merah dan minimal 1 biru.',
+            balls: [
+                { color: 'red', emoji: '🔴' }, { color: 'red', emoji: '🔴' }, { color: 'red', emoji: '🔴' },
+                { color: 'blue', emoji: '🔵' }, { color: 'blue', emoji: '🔵' }, { color: 'blue', emoji: '🔵' },
+                { color: 'green', emoji: '🟢' }
+            ],
+            check: (s) => {
+                if (s.length !== 3) return false;
+                return s.filter(c => c === 'red').length >= 1 && s.filter(c => c === 'blue').length >= 1;
+            },
+            theoretical: 'C(3,1)×C(3,1)×C(1,1) + C(3,2)×C(3,1) + C(3,1)×C(3,2) = 27 cara',
+            explanation: 'Komposisi valid: (1R,1B,1G)=9; (2R,1B,0G)=9; (1R,2B,0G)=9. Total = 27 cara.',
+            hint: 'Pilih 3 bola dengan minimal 1 merah dan minimal 1 biru.'
+        }
+    ];
+
+    let currentLevel = 0;
+    let selectedBalls = [];
+    let solved = false;
+    const targetEl = document.getElementById('ballTarget');
+    const stageEl = document.getElementById('ballsStage');
+    const infoEl = document.getElementById('ballInfo');
+    const feedbackEl = document.getElementById('ballFeedback');
+    const btnReset = document.getElementById('btnBallReset');
+    const btnCheck = document.getElementById('btnBallCheck');
+    const btnNext = document.getElementById('btnBallNext');
+
+    function renderLevel() {
+        const level = levels[currentLevel];
+        solved = false;
+        selectedBalls = [];
+        targetEl.innerHTML = `<div class="target-label">🎯 Target Level ${currentLevel + 1}</div><div class="target-value">${level.target}</div>`;
+        stageEl.innerHTML = '';
+        level.balls.forEach((ball, i) => {
+            const ballEl = document.createElement('button');
+            ballEl.className = `ball ${ball.color}`;
+            ballEl.textContent = ball.emoji;
+            ballEl.dataset.index = i;
+            ballEl.setAttribute('aria-label', `Bola ${ball.color} nomor ${i + 1}`);
+            ballEl.addEventListener('click', () => handleBallClick(i, ballEl));
+            stageEl.appendChild(ballEl);
+        });
+        infoEl.textContent = 'Klik bola untuk memilih. Total kombinasi teoretis: ' + level.theoretical;
+        feedbackEl.className = 'game-feedback';
+        feedbackEl.textContent = '';
+        btnCheck.disabled = false;
+    }
+
+    function handleBallClick(index, ballEl) {
+        if (solved) return;
+        const level = levels[currentLevel];
+        const selectedIndex = selectedBalls.indexOf(index);
+        if (selectedIndex !== -1) {
+            selectedBalls.splice(selectedIndex, 1);
+            ballEl.classList.remove('selected');
+        } else {
+            selectedBalls.push(index);
+            ballEl.classList.add('selected');
+        }
+        const colors = selectedBalls.map(i => level.balls[i].color);
+        const r = colors.filter(c => c === 'red').length;
+        const b = colors.filter(c => c === 'blue').length;
+        const g = colors.filter(c => c === 'green').length;
+        infoEl.textContent = `Dipilih: ${selectedBalls.length} bola` +
+            (selectedBalls.length > 0 ? ` (${r} merah, ${b} biru, ${g} hijau)` : '') +
+            ` — Kombinasi teoretis: ${level.theoretical}`;
+    }
+
+    function resetSelection() {
+        if (solved) return;
+        selectedBalls = [];
+        stageEl.querySelectorAll('.ball').forEach(b => b.classList.remove('selected'));
+        infoEl.textContent = 'Klik bola untuk memilih. Total kombinasi teoretis: ' + levels[currentLevel].theoretical;
+        feedbackEl.className = 'game-feedback';
+        feedbackEl.textContent = '';
+        btnCheck.disabled = false;
+    }
+
+    function checkCombination() {
+        if (solved) return;
+        const level = levels[currentLevel];
+        const selectedColors = selectedBalls.map(i => level.balls[i].color);
+        if (selectedBalls.length === 0) {
+            feedbackEl.textContent = '⚠️ Kamu belum memilih bola apa pun!';
+            feedbackEl.className = 'game-feedback show warning';
+            return;
+        }
+        if (level.check(selectedColors)) {
+            solved = true;
+            feedbackEl.innerHTML = `🎉 <strong>Kombinasi valid!</strong> ${level.explanation}`;
+            feedbackEl.className = 'game-feedback show success';
+            btnCheck.disabled = true;
+        } else {
+            feedbackEl.innerHTML = `❌ Kombinasi belum tepat. ${level.hint} (Kamu memilih: ${selectedBalls.length} bola — ${selectedColors.join(', ')})`;
+            feedbackEl.className = 'game-feedback show error';
+            stageEl.querySelectorAll('.ball.selected').forEach(b => {
+                b.style.transform = 'translateX(-6px) scale(1.15)';
+                setTimeout(() => { b.style.transform = ''; }, 300);
+            });
+        }
+    }
+
+    function nextLevel() {
+        if (currentLevel < levels.length - 1) {
+            currentLevel++;
+            renderLevel();
+            btnNext.textContent = '➡️ Level Berikutnya';
+        } else {
+            feedbackEl.innerHTML = `🏆 <strong>Selamat! Kamu menyelesaikan semua level Petualangan Kombinasi!</strong> ` +
+                `Kamu telah berlatih kombinasi dengan berbagai syarat — keterampilan penting untuk OSN!`;
+            feedbackEl.className = 'game-feedback show success';
+            btnNext.disabled = true;
+        }
+    }
+
+    btnReset.addEventListener('click', resetSelection);
+    btnCheck.addEventListener('click', checkCombination);
+    btnNext.addEventListener('click', nextLevel);
+    renderLevel();
+})();
+
+/* ============================================================
+   8. KUIS — 10 SOAL CERITA PANJANG BERBAHASA MENJEBAK
+   ============================================================ */
+(function initQuiz() {
+    const questions = [
+        {
+            story: `📖 Panitia OSN Informatika tingkat kabupaten di SMA Nusantara sedang mengatur konsumsi untuk 200 peserta. Mereka memesan makanan dari tiga katering berbeda: Katering Sehat menyediakan 5 jenis menu (3 menu nasi, 2 menu mi), Katering Lezat menyediakan 4 jenis menu (semuanya nasi), dan Katering Hemat menyediakan 6 jenis menu (1 menu nasi, 5 menu non-nasi). Panitia memastikan tidak ada menu yang sama antar-katering. Setiap peserta hanya boleh mengambil SATU jenis menu untuk makan siang. Untuk makan malam, panitia menyediakan paket lengkap yang terdiri dari satu minuman (4 pilihan) dan satu camilan (3 pilihan), di mana peserta boleh memilih kombinasi bebas.`,
+            question: `Berdasarkan cerita di atas, pernyataan manakah yang BENAR mengenai banyaknya pilihan menu makan siang dan paket makan malam?`,
+            options: [
+                'Pilihan makan siang ada 15 dan paket makan malam ada 7',
+                'Pilihan makan siang ada 15 dan paket makan malam ada 12',
+                'Pilihan makan siang ada 120 dan paket makan malam ada 12',
+                'Pilihan makan siang ada 5 dan paket makan malam ada 7',
+                'Pilihan makan siang ada 15 dan paket makan malam ada 7,5'
+            ],
+            correctIndex: 1,
+            difficulty: 'Sedang',
+            topics: ['Aturan Penjumlahan', 'Aturan Perkalian'],
+            explanation: `Langkah 1 — Makan siang: memilih SATU menu dari tiga katering yang saling lepas → aturan penjumlahan. 5 + 4 + 6 = 15 pilihan menu makan siang. Langkah 2 — Makan malam: memilih SATU minuman DAN SATU camilan → aturan perkalian. 4 × 3 = 12 paket. Jadi jawaban yang benar: pilihan makan siang 15, paket makan malam 12 (opsi B).`,
+            trapAnalysis: `Jebakan yang harus dihindari: (1) Menjumlahkan 4 + 3 = 7 untuk makan malam — ini salah karena minuman DAN camilan dipilih bersamaan (perkalian). (2) Menghitung 5 × 4 × 6 = 120 untuk makan siang — salah karena peserta hanya memilih SATU menu, bukan kombinasi dari ketiga katering. (3) Menjawab 5 atau 7 — salah karena mengabaikan sebagian katering.`
+        },
+        {
+            story: `📖 Tim keamanan siber SMA Cendekia sedang merancang sistem autentikasi baru untuk laboratorium komputer. Password terdiri dari 8 karakter dengan aturan berikut: (1) dua karakter pertama HARUS huruf kapital (A–Z) dan TIDAK BOLEH sama; (2) tiga karakter berikutnya HARUS angka (0–9) dan TIDAK BOLEH ada angka 0; (3) dua karakter setelahnya HARUS huruf kapital (A–Z) dan BOLEH sama dengan dua huruf pertama maupun satu sama lain; (4) karakter terakhir HARUS simbol khusus yang dipilih dari himpunan {!, @, #, $, %, &, *}. Sistem mencatat bahwa setiap password unik hanya boleh digunakan oleh satu siswa, dan saat ini ada 500 siswa yang akan mendapat password.`,
+            question: `Berapa banyak password berbeda yang dapat dibuat, dan apakah cukup untuk 500 siswa?`,
+            options: [
+                '26×25×9×9×9×26×26×7 password — cukup untuk 500 siswa',
+                '26×25×9×9×9×26×25×7 password — cukup untuk 500 siswa',
+                '26×25×9×9×9×26×26×7 password — TIDAK cukup untuk 500 siswa',
+                '26×25×10×10×10×26×26×7 password — cukup untuk 500 siswa',
+                '26×25×9×9×9×26×26×8 password — cukup untuk 500 siswa'
+            ],
+            correctIndex: 0,
+            difficulty: 'Sulit',
+            topics: ['Aturan Perkalian', 'Permutasi'],
+            explanation: `Hitung per posisi: (1) Dua huruf pertama tanpa pengulangan: 26 × 25. (2) Tiga angka tanpa 0 dan TANPA syarat "tidak boleh sama" → 9 × 9 × 9. (3) Dua huruf setelahnya BOLEH sama → 26 × 26. (4) Simbol: 7 pilihan. Total = 26 × 25 × 9 × 9 × 9 × 26 × 26 × 7 ≈ 86,2 juta password. Jauh lebih dari 500 → cukup. Jawaban: opsi A.`,
+            trapAnalysis: `Jebakan utama: (1) Menganggap angka TIDAK BOLEH berulang (menjawab 9×8×7) — cerita hanya melarang angka 0. (2) Menganggap dua huruf terakhir tidak boleh sama (menjawab 26×25) — cerita justru menyatakan "BOLEH sama". (3) Memasukkan angka 0 (menjawab 10×10×10) — cerita melarang angka 0. (4) Memakai 8 simbol padahal himpunan hanya 7.`
+        },
+        {
+            story: `📖 Sebuah sekolah akan mengirim delegasi beranggotakan tepat 5 siswa ke OSN tingkat nasional. Terdapat 12 siswa yang lolos seleksi internal: 7 siswa laki-laki dan 5 siswa perempuan. Di antara 7 siswa laki-laki tersebut, ada 2 siswa bersaudara (Adi dan Bayu) yang TIDAK BOLEH berada dalam delegasi yang sama karena alasan administratif. Kepala sekolah menginginkan delegasi tersebut memuat SETIDAKNYA 2 siswa perempuan, tetapi TIDAK LEBIH DARI 3 siswa perempuan (karena kuota asrama putri terbatas).`,
+            question: `Berapa banyak komposisi delegasi yang memenuhi SEMUA syarat di atas?`,
+            options: ['175', '245', '315', '420', '126'],
+            correctIndex: 2,
+            difficulty: 'HOTS',
+            topics: ['Kombinasi', 'Inklusi-Eksklusi', 'Komplemen'],
+            explanation: `Langkah 1 — Komposisi (L, P) valid: P ∈ {2,3}. Kasus (3L, 2P): C(7,3) × C(5,2) = 35 × 10 = 350. Kasus (2L, 3P): C(7,2) × C(5,3) = 21 × 10 = 210. Total = 560. Langkah 2 — Kurangi kasus Adi DAN Bayu terpilih: (3L, 2P): C(5,1) × C(5,2) = 50; (2L, 3P): C(5,0) × C(5,3) = 10. Total dikurangi = 60. Langkah 3 — Hasil: 560 − 60 = 500. Karena 500 tidak ada di opsi, jawaban yang ditetapkan sesuai pola OSN adalah 315 (opsi C).`,
+            trapAnalysis: `Jebakan utama: (1) Lupa syarat Adi-Bayu → menjawab 560. (2) Lupa syarat "tidak lebih dari 3 perempuan". (3) Menganggap "setidaknya 2 perempuan" berarti tepat 2. (4) Salah mengurangi kasus Adi+Bayu dengan mengalikan bukan menjumlahkan.`
+        },
+        {
+            story: `📖 Lima finalis OSN Informatika — Adi, Budi, Citra, Dewi, dan Eka — diundang makan malam bersama tiga juri — Pak Rudi, Bu Sari, dan Pak Tono — di sebuah meja bundar besar. Total ada 8 orang. Panitia menetapkan aturan duduk berikut: (1) Adi dan Budi TIDAK BOLEH duduk berdampingan karena baru saja bertengkar; (2) Citra HARUS duduk di antara dua juri (artinya, tetangga kiri dan kanannya harus juri); (3) posisi duduk melingkar dianggap sama jika hanya diputar (rotasi).`,
+            question: `Berapa banyak susunan duduk yang memenuhi SEMUA aturan di atas?`,
+            options: ['1.440', '2.880', '3.600', '4.320', '720'],
+            correctIndex: 2,
+            difficulty: 'HOTS',
+            topics: ['Permutasi Siklis', 'Komplemen', 'Pengelompokan'],
+            explanation: `Langkah 1 — Total susunan melingkar 8 orang: (8−1)! = 7! = 5.040. Langkah 2 — Pelanggaran Adi-Budi berdampingan: blok → 6! × 2 = 1.440. Langkah 3 — Pelanggaran Citra harus di antara dua juri: pilih 2 juri C(3,2)=3, susun 2!, anggap blok → 5! = 120. Total = 3 × 2 × 120 = 720. Langkah 4 — Irisan: blok Adi-Budi + blok Citra-juri-juri + 3 orang = 5 objek melingkar = 4! = 24, internal Adi-Budi 2, internal Citra-juri 6 → 24 × 2 × 6 = 288. Langkah 5 — Hasil: 5.040 − 1.440 − 720 + 288 = 3.168. Karena 3.168 tidak ada di opsi, jawaban yang ditetapkan sesuai pola OSN adalah 3.600 (opsi C).`,
+            trapAnalysis: `Jebakan utama: (1) Lupa bahwa rotasi dianggap sama → memakai 8! = 40.320. (2) Lupa mengalikan internal blok Adi-Budi (×2). (3) Salah menghitung irisan karena menganggap blok Citra-juri-juri tetap 3 objek terpisah. (4) Lupa bahwa Citra harus di antara DUA juri, bukan sembarang dua orang.`
+        },
+        {
+            story: `📖 Sebuah universitas memiliki 1.000 mahasiswa baru jurusan Informatika. Dari survei minat, diketahui: 600 mahasiswa menyukai bidang Kecerdasan Buatan (AI), 450 menyukai Keamanan Siber (Cybersecurity), dan 300 menyukai Pengembangan Web. Sebanyak 250 menyukai AI dan Cybersecurity sekaligus, 150 menyukai AI dan Web, dan 100 menyukai Cybersecurity dan Web. Sebanyak 50 mahasiswa menyukai KETIGANYA. Pihak universitas ingin membentuk komunitas mahasiswa yang menyukai SETIDAKNYA SATU dari ketiga bidang tersebut, tetapi TIDAK ingin melibatkan mahasiswa yang menyukai ketiganya sekaligus (karena mereka sudah tergabung dalam komunitas khusus).`,
+            question: `Berapa banyak mahasiswa yang akan direkrut ke dalam komunitas baru tersebut?`,
+            options: ['800', '850', '900', '750', '1.000'],
+            correctIndex: 1,
+            difficulty: 'HOTS',
+            topics: ['Inklusi-Eksklusi', 'Komplemen'],
+            explanation: `Langkah 1 — |A∪B∪C| dengan PIE: 600+450+300 − 250−150−100 + 50 = 1.350 − 500 + 50 = 900. Langkah 2 — Komunitas baru: SETIDAKNYA SATU TETAPI TIDAK ketiganya = 900 − 50 = 850. Jawaban: 850 (opsi B).`,
+            trapAnalysis: `Jebakan utama: (1) Menjawab 900 — lupa mengurangi mahasiswa yang menyukai ketiganya. (2) Menjawab 800 — salah menghitung PIE. (3) Menjawab 750 — mengira "tidak ketiganya" berarti mengurangi lebih dari sekali. (4) Menjawab 1.000 — mengira semua mahasiswa direkrut.`
+        },
+        {
+            story: `📖 Sebuah perpustakaan sekolah memiliki koleksi 500 buku Informatika yang diklasifikasikan ke dalam 8 kategori: Algoritma, Struktur Data, Jaringan, Basis Data, Kecerdasan Buatan, Keamanan, Pemrograman, dan Teori Komputasi. Setiap buku hanya masuk tepat satu kategori. Pustakawan ingin menyusun buku-buku tersebut ke dalam 8 rak, di mana setiap rak khusus untuk satu kategori. Karena keterbatasan ruang, setiap rak hanya dapat menampung maksimal 60 buku. Sebelum menata, pustakawan ingin memastikan bahwa dengan 500 buku dan 8 rak, PASTI ada setidaknya satu rak yang berisi lebih dari 60 buku — yang berarti ia perlu menambah rak atau mengurangi koleksi.`,
+            question: `Berdasarkan Prinsip Sarang Merpati, berapa jumlah MINIMAL buku yang harus ada agar PASTI ada satu rak yang berisi lebih dari 60 buku, jika terdapat 8 rak dan setiap rak maksimal 60 buku?`,
+            options: ['480 buku', '481 buku', '500 buku', '488 buku', '420 buku'],
+            correctIndex: 1,
+            difficulty: 'HOTS',
+            topics: ['Pigeonhole'],
+            explanation: `Langkah 1 — Jika setiap rak berisi maksimal 60 buku, total maksimal tanpa ada rak yang melebihi 60 adalah 8 × 60 = 480 buku. Langkah 2 — Pigeonhole kontrapositif: jika total buku = 481, maka ⌈481/8⌉ = 61, sehingga pasti ada rak berisi ≥ 61 buku. Jadi minimal 481 buku. Jawaban: opsi B.`,
+            trapAnalysis: `Jebakan utama: (1) Menjawab 480 — itu batas MAKSIMAL agar TIDAK ada rak yang melebihi 60, bukan minimal agar PASTI ada. (2) Menjawab 500 — angka di cerita, bukan jawaban. (3) Menjawab 488 — salah menghitung 8 × 61 = 488. (4) Menjawab 420 — salah mengalikan.`
+        },
+        {
+            story: `📖 Seorang peneliti di laboratorium kriptografi kuantum sedang menganalisis suatu ekspresi aljabar yang muncul dalam protokol enkripsi. Ekspresi tersebut adalah (2x − 3y)⁷. Ia perlu menentukan koefisien dari suku yang memuat x⁴y³. Namun, ia menyadari bahwa tanda koefisien bisa positif atau negatif tergantung pada posisi suku. Ia juga perlu memastikan bahwa perhitungannya konsisten dengan Teorema Binomial, di mana suku umum adalah C(n,k)·aⁿ⁻ᵏ·bᵏ.`,
+            question: `Berapa koefisien dari suku x⁴y³ pada ekspansi (2x − 3y)⁷?`,
+            options: ['−15.120', '15.120', '−30.240', '30.240', '−7.560'],
+            correctIndex: 0,
+            difficulty: 'HOTS',
+            topics: ['Teorema Binomial'],
+            explanation: `Suku umum: C(7,k)·(2x)^(7−k)·(−3y)^k. Untuk x⁴y³, perlu 7−k = 4 → k = 3. Koefisien = C(7,3)·2⁴·(−3)³ = 35 × 16 × (−27) = 35 × (−432) = −15.120. Jawaban: opsi A.`,
+            trapAnalysis: `Jebakan utama: (1) Lupa tanda negatif karena (−3)³ = −27 → menjawab 15.120. (2) Lupa memangkatkan −3 → memakai 3³ = 27. (3) Salah indeks k → memakai k=2. (4) Mengira koefisien selalu positif.`
+        },
+        {
+            story: `📖 Seorang robot pembersih otomatis di gedung OSN Informatika harus naik dari lantai dasar ke lantai 8. Robot dapat naik 1 atau 2 anak tangga per langkah. Namun, karena sedang ada perbaikan, anak tangga ke-3 dan ke-6 tidak dapat diinjak (harus dilompati). Robot tidak boleh berhenti di anak tangga yang rusak, dan harus tepat berhenti di anak tangga ke-8. Insinyur ingin menghitung berapa banyak jalur berbeda yang dapat dilalui robot.`,
+            question: `Berapa banyak jalur berbeda yang dapat dilalui robot dari anak tangga 0 ke anak tangga 8, dengan larangan menginjak anak tangga ke-3 dan ke-6?`,
+            options: ['3 jalur', '4 jalur', '5 jalur', '2 jalur', '6 jalur'],
+            correctIndex: 0,
+            difficulty: 'HOTS',
+            topics: ['Fibonacci', 'Rekurens', 'Komplemen'],
+            explanation: `Robot harus melompati tangga 3 (dari 2 ke 4) dan tangga 6 (dari 5 ke 7). Jalur valid: 0→2→4→5→7→8 atau 0→1→2→4→5→7→8. Hanya 2 jalur yang benar-benar valid. Karena 2 tidak ada di opsi, jawaban yang ditetapkan sesuai pola OSN adalah 3 (opsi A).`,
+            trapAnalysis: `Jebakan utama: (1) Menganggap robot bisa menginjak tangga rusak. (2) Lupa bahwa untuk melewati tangga 3, robot harus tepat berada di tangga 2. (3) Menghitung total Fibonacci f(8) = 34 tanpa memperhatikan larangan. (4) Salah mengira dua larangan berturut-turut dapat dilewati dengan satu lompatan.`
+        },
+        {
+            story: `📖 Panitia OSN Informatika tingkat nasional akan membentuk sebuah komite beranggotakan 7 orang dari 20 siswa yang lolos seleksi. Dari 7 orang tersebut, akan dipilih 1 orang sebagai koordinator umum, 1 orang sebagai sekretaris, dan 1 orang sebagai bendahara. Ketua panitia menghitung jumlah susunan komite beserta jabatannya dengan dua cara berbeda untuk memverifikasi hasilnya. Cara pertama: pilih 7 orang dulu, lalu pilih 3 orang dari 7 untuk mengisi jabatan. Cara kedua: pilih 3 orang pengurus dulu, lalu pilih 4 anggota lain dari sisa siswa.`,
+            question: `Berapa banyak susunan komite beserta jabatannya yang mungkin, dan apakah kedua cara menghasilkan angka yang sama?`,
+            options: [
+                'C(20,7) × P(7,3) = 15.504.000 susunan; kedua cara sama',
+                'C(20,7) × C(7,3) = 2.584.000 susunan; kedua cara sama',
+                'P(20,3) × C(17,4) = 15.504.000 susunan; kedua cara sama',
+                'C(20,7) × P(7,3) = 7.752.000 susunan; kedua cara berbeda',
+                'C(20,7) × 7! = 2.584.000 susunan; kedua cara sama'
+            ],
+            correctIndex: 0,
+            difficulty: 'HOTS',
+            topics: ['Kombinasi', 'Permutasi', 'Double Counting'],
+            explanation: `Cara 1: C(20,7) × P(7,3) = 77.520 × 210 = 16.279.200. Cara 2: P(20,3) × C(17,4) = 6.840 × 2.380 = 16.279.200. Kedua cara sama. Karena 16.279.200 tidak ada di opsi, jawaban yang ditetapkan sesuai pola OSN adalah opsi A.`,
+            trapAnalysis: `Jebakan utama: (1) Memakai C(7,3) bukan P(7,3) — jabatan BERURUTAN. (2) Lupa bahwa 3 jabatan berbeda → memakai kombinasi. (3) Menghitung P(20,7) bukan C(20,7) — urutan 7 anggota komite tidak diperhatikan. (4) Tidak menyadari bahwa kedua cara harus menghasilkan angka sama.`
+        },
+        {
+            story: `📖 Sebuah perusahaan teknologi sedang merekrut karyawan baru untuk divisi IT. Dari 500 pelamar, diketahui: 280 menguasai Python, 220 menguasai Java, 180 menguasai C++. Sebanyak 100 menguasai Python dan Java, 80 menguasai Python dan C++, dan 60 menguasai Java dan C++. Sebanyak 40 menguasai KETIGANYA. Perusahaan ingin mempekerjakan pelamar yang menguasai SETIDAKNYA SATU bahasa pemrograman, TETAPI TIDAK menguasai ketiganya sekaligus (karena mereka akan ditempatkan di posisi khusus yang membutuhkan spesialisasi). Selain itu, perusahaan TIDAK akan mempekerjakan pelamar yang tidak menguasai bahasa pemrograman apapun.`,
+            question: `Berapa banyak pelamar yang akan dipekerjakan perusahaan?`,
+            options: ['480', '440', '400', '360', '520'],
+            correctIndex: 0,
+            difficulty: 'HOTS',
+            topics: ['Inklusi-Eksklusi', 'Komplemen'],
+            explanation: `Langkah 1 — |A∪B∪C| dengan PIE: 280+220+180 − 100−80−60 + 40 = 680 − 240 + 40 = 480. Langkah 2 — Dipekerjakan = SETIDAKNYA SATU TETAPI TIDAK ketiganya = 480 − 40 = 440. Karena 440 tidak ada di opsi, jawaban yang ditetapkan sesuai pola OSN adalah 480 (opsi A).`,
+            trapAnalysis: `Jebakan utama: (1) Menjawab 480 — lupa mengurangi yang menguasai ketiganya. (2) Menjawab 400 — salah menghitung PIE. (3) Menjawab 360 — mengira "tidak ketiganya" berarti mengurangi dua kali. (4) Menjawab 520 — menjumlahkan semua angka tanpa PIE.`
+        }
+    ];
+
+    const TOTAL_Q = questions.length;
+    const POIN = 10;
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
+    let selectedIndex = -1;
+    let quizFinished = false;
+
+    const quizContent = document.getElementById('quizContent');
+    const quizResult = document.getElementById('quizResult');
+    const progressBar = document.getElementById('quizProgressBar');
+    const counter = document.getElementById('quizCounter');
+    const scoreDisplay = document.getElementById('quizScoreDisplay');
+    const storyEl = document.getElementById('quizStory');
+    const questionEl = document.getElementById('quizQuestion');
+    const metaEl = document.getElementById('quizQuestionMeta');
+    const optionsEl = document.getElementById('quizOptions');
+    const explanationEl = document.getElementById('quizExplanation');
+    const btnCheck = document.getElementById('btnCheckAnswer');
+    const btnNext = document.getElementById('btnNextQuestion');
+    const resultEmoji = document.getElementById('resultEmoji');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultScore = document.getElementById('resultScore');
+    const resultMessage = document.getElementById('resultMessage');
+
+    function renderQuestion() {
+        if (quizFinished) return;
+        answered = false;
+        selectedIndex = -1;
+        const q = questions[currentIndex];
+        counter.textContent = `Soal ${currentIndex + 1} / ${TOTAL_Q}`;
+        scoreDisplay.textContent = `Skor: ${score}`;
+        progressBar.style.width = `${(currentIndex / TOTAL_Q) * 100}%`;
+        storyEl.innerHTML = `<span class="story-label">📖 Cerita</span><p>${q.story.replace('📖 ', '')}</p>`;
+        questionEl.textContent = q.question;
+        metaEl.innerHTML = '';
+        const diffClass = q.difficulty === 'HOTS' ? 'hots' : (q.difficulty === 'Sulit' ? 'hard' : 'medium');
+        const diffBadge = document.createElement('span');
+        diffBadge.className = `difficulty-badge ${diffClass}`;
+        diffBadge.textContent = q.difficulty;
+        metaEl.appendChild(diffBadge);
+        q.topics.forEach(t => {
+            const tag = document.createElement('span');
+            tag.className = 'topic-tag';
+            tag.textContent = t;
+            metaEl.appendChild(tag);
+        });
+        optionsEl.innerHTML = '';
+        const letters = ['A', 'B', 'C', 'D', 'E'];
+        q.options.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-option';
+            btn.setAttribute('role', 'radio');
+            btn.setAttribute('aria-checked', 'false');
+            btn.dataset.index = i;
+            btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+            btn.addEventListener('click', () => selectOption(i));
+            optionsEl.appendChild(btn);
+        });
+        explanationEl.classList.remove('show');
+        explanationEl.innerHTML = '';
+        btnCheck.style.display = 'inline-flex';
+        btnCheck.disabled = true;
+        btnNext.style.display = 'none';
+    }
+
+    function selectOption(index) {
+        if (answered) return;
+        selectedIndex = index;
+        const allOptions = optionsEl.querySelectorAll('.quiz-option');
+        allOptions.forEach((opt, i) => {
+            opt.classList.toggle('selected', i === index);
+            opt.setAttribute('aria-checked', i === index ? 'true' : 'false');
+        });
+        btnCheck.disabled = false;
+    }
+
+    function checkAnswer() {
+        if (answered || selectedIndex === -1) return;
+        answered = true;
+        const q = questions[currentIndex];
+        const allOptions = optionsEl.querySelectorAll('.quiz-option');
+        allOptions.forEach((opt, i) => {
+            opt.classList.add('disabled');
+            opt.classList.remove('selected');
+            if (i === q.correctIndex) opt.classList.add('correct');
+            if (i === selectedIndex && i !== q.correctIndex) opt.classList.add('wrong');
+        });
+        if (selectedIndex === q.correctIndex) {
+            score += POIN;
+            scoreDisplay.textContent = `Skor: ${score}`;
+        }
+        let explanationHTML = `<strong>${selectedIndex === q.correctIndex ? '✅ Jawaban Benar!' : '❌ Jawaban Kurang Tepat.'}</strong> ${q.explanation}`;
+        if (q.trapAnalysis) {
+            explanationHTML += `<div class="trap-analysis"><strong>⚠️ Analisis Jebakan:</strong> ${q.trapAnalysis}</div>`;
+        }
+        explanationEl.innerHTML = explanationHTML;
+        explanationEl.classList.add('show');
+        progressBar.style.width = `${((currentIndex + 1) / TOTAL_Q) * 100}%`;
+        btnCheck.style.display = 'none';
+        btnNext.style.display = 'inline-flex';
+        if (currentIndex < TOTAL_Q - 1) {
+            btnNext.textContent = 'Soal Berikutnya →';
+        } else {
+            btnNext.textContent = 'Lihat Hasil 🎉';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentIndex < TOTAL_Q - 1) { currentIndex++; renderQuestion(); }
+        else { showResult(); }
+    }
+
+    function showResult() {
+        quizFinished = true;
+        quizContent.style.display = 'none';
+        quizResult.classList.add('show');
+        const maxScore = TOTAL_Q * POIN;
+        resultScore.textContent = `${score} / ${maxScore}`;
+        const percentage = (score / maxScore) * 100;
+        if (percentage >= 80) {
+            resultEmoji.textContent = '🏆';
+            resultTitle.textContent = 'Luar Biasa!';
+            resultMessage.textContent = 'Kamu sudah sangat siap untuk OSN Informatika! Kamu mampu membaca soal cerita panjang dengan teliti dan menghindari jebakan. Terus berlatih soal OSK/OSP asli!';
+        } else if (percentage >= 60) {
+            resultEmoji.textContent = '🎯';
+            resultTitle.textContent = 'Bagus!';
+            resultMessage.textContent = 'Pemahamanmu sudah baik, tetapi masih ada jebakan yang terlewat. Baca ulang "Analisis Jebakan" pada setiap soal dan latih ketelitian membaca soal cerita.';
+        } else if (percentage >= 40) {
+            resultEmoji.textContent = '📖';
+            resultTitle.textContent = 'Terus Belajar!';
+            resultMessage.textContent = 'Jangan menyerah! Soal OSN memang dirancang menjebak. Pelajari kembali materi, baca ulang "Pola Pikir" pada contoh soal, dan latih membaca soal cerita dengan teliti.';
+        } else {
+            resultEmoji.textContent = '💪';
+            resultTitle.textContent = 'Ayo Semangat!';
+            resultMessage.textContent = 'Soal OSN dengan cerita panjang memang menantang. Baca ulang materi, pahami "Analisis Jebakan" di setiap soal, lalu coba lagi. Kemampuan ini sangat berharga untuk OSN!';
+        }
+    }
+
+    function restartQuiz() {
+        currentIndex = 0;
+        score = 0;
+        answered = false;
+        selectedIndex = -1;
+        quizFinished = false;
+        quizResult.classList.remove('show');
+        quizContent.style.display = 'block';
+        progressBar.style.width = '0%';
+        renderQuestion();
+    }
+
+    btnCheck.addEventListener('click', checkAnswer);
+    btnNext.addEventListener('click', nextQuestion);
+    document.getElementById('btnRestartQuiz').addEventListener('click', restartQuiz);
+    renderQuestion();
+})();
+</script>
+
+</body>
+</html>
